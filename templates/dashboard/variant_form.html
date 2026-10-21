@@ -1,0 +1,20 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg">
+  <a href="{% url 'core:variant_list' product.pk %}" class="text-xs text-taupe hover:text-espresso mb-4 block">← Back to variants</a>
+  <form method="post" class="bg-white border border-sand p-6 space-y-4">
+    {% csrf_token %}
+    {% for field in form %}
+    <div>
+      <label class="block text-xs tracking-widest uppercase mb-1 text-espresso/60">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="text-xs text-red-600 mt-1">{{ field.errors.0 }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn-primary">Save</button>
+  </form>
+</div>
+{% endblock %}

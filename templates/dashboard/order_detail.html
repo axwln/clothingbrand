@@ -1,0 +1,68 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Order {{ order.order_number }}{% endblock %}
+{% block page_title %}Order {{ order.order_number }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <!-- Items -->
+  <div class="lg:col-span-2 space-y-4">
+    <div class="bg-white border border-sand p-5">
+      <h2 class="font-medium mb-4">Items</h2>
+      <div class="space-y-3 text-sm">
+        {% for item in order.items.all %}
+        <div class="flex justify-between">
+          <span>{{ item.product_name }} ({{ item.size }}{% if item.color %} / {{ item.color }}{% endif %}) × {{ item.quantity }}</span>
+          <span>₹{{ item.line_total|floatformat:0 }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="border-t border-sand mt-3 pt-3 text-sm space-y-1">
+        <div class="flex justify-between"><span>Subtotal</span><span>₹{{ order.subtotal|floatformat:0 }}</span></div>
+        {% if order.discount_amount %}<div class="flex justify-between text-taupe"><span>Discount ({{ order.coupon_code }})</span><span>−₹{{ order.discount_amount|floatformat:0 }}</span></div>{% endif %}
+        <div class="flex justify-between font-medium"><span>Total</span><span>₹{{ order.total|floatformat:0 }}</span></div>
+      </div>
+    </div>
+
+    <!-- Payment -->
+    <div class="bg-white border border-sand p-5">
+      <h2 class="font-medium mb-3">Payments</h2>
+      {% for payment in order.payments.all %}
+      <div class="text-sm space-y-1">
+        <div class="flex justify-between"><span>Razorpay Order ID</span><span class="font-mono text-xs">{{ payment.razorpay_order_id }}</span></div>
+        {% if payment.razorpay_payment_id %}<div class="flex justify-between"><span>Payment ID</span><span class="font-mono text-xs">{{ payment.razorpay_payment_id }}</span></div>{% endif %}
+        <div class="flex justify-between"><span>Status</span><span>{{ payment.get_status_display }}</span></div>
+      </div>
+      {% empty %}
+      <p class="text-sm text-espresso/40">No payment records.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="space-y-4">
+    <div class="bg-white border border-sand p-5">
+      <h2 class="font-medium mb-3">Customer</h2>
+      <div class="text-sm space-y-1 text-espresso/70">
+        <p class="font-medium text-espresso">{{ order.customer_name }}</p>
+        <p>{{ order.customer_email }}</p>
+        <p>{{ order.customer_phone }}</p>
+        <p class="pt-2">{{ order.address_line1 }}{% if order.address_line2 %}, {{ order.address_line2 }}{% endif %}</p>
+        <p>{{ order.city }}, {{ order.state }} {{ order.pincode }}</p>
+      </div>
+    </div>
+
+    <div class="bg-white border border-sand p-5">
+      <h2 class="font-medium mb-3">Update Status</h2>
+      <form method="post" action="{% url 'core:order_status_update' order.pk %}" class="space-y-3">
+        {% csrf_token %}
+        <select name="status" class="input-field">
+          {% for val, label in status_choices %}
+            <option value="{{ val }}" {% if order.status == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn-primary w-full">Update</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Offers{% endblock %}
+{% block page_title %}Offers{% endblock %}
+{% block content %}
+<div class="flex justify-end mb-4">
+  <a href="{% url 'core:offer_create' %}" class="btn-primary">+ New Offer</a>
+</div>
+<div class="bg-white border border-sand">
+  <table class="w-full text-sm">
+    <thead class="border-b border-sand text-xs tracking-widest uppercase text-espresso/50">
+      <tr>
+        <th class="text-left px-4 py-3">Name</th>
+        <th class="text-left px-4 py-3">Discount</th>
+        <th class="text-left px-4 py-3">Period</th>
+        <th class="text-left px-4 py-3">Active</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-sand">
+      {% for offer in offers %}
+      <tr class="hover:bg-ivory/50">
+        <td class="px-4 py-3 font-medium">{{ offer.name }}</td>
+        <td class="px-4 py-3">{{ offer.discount_value }}{% if offer.discount_type == 'percent' %}%{% else %} ₹{% endif %}</td>
+        <td class="px-4 py-3 text-xs text-espresso/50">{{ offer.start_date|date:"d M" }} – {{ offer.end_date|date:"d M Y" }}</td>
+        <td class="px-4 py-3">{% if offer.is_active %}✓{% else %}—{% endif %}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'core:offer_edit' offer.pk %}" class="text-xs text-taupe hover:text-espresso">Edit</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="px-4 py-8 text-center text-espresso/40">No offers yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

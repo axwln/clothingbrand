@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Checkout — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-10">
+  <h1 class="font-serif text-3xl mb-8">Checkout</h1>
+
+  {% if error %}
+    <div class="mb-6 px-4 py-3 border border-red-300 bg-red-50 text-red-700 text-sm">{{ error }}</div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
+
+    <!-- Form -->
+    <div class="lg:col-span-3">
+      <form id="checkout-form" method="post" novalidate>
+        {% csrf_token %}
+        <h2 class="font-serif text-xl mb-4">Delivery Details</h2>
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs tracking-widest uppercase mb-1">Full Name *</label>
+              <input type="text" name="customer_name" required class="input-field" placeholder="Your name">
+            </div>
+            <div>
+              <label class="block text-xs tracking-widest uppercase mb-1">Phone *</label>
+              <input type="tel" name="customer_phone" required class="input-field" placeholder="+91 98765 43210">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-1">Email *</label>
+            <input type="email" name="customer_email" required class="input-field" placeholder="you@example.com">
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-1">Address Line 1 *</label>
+            <input type="text" name="address_line1" required class="input-field" placeholder="House / Flat / Street">
+          </div>
+          <div>
+            <label class="block text-xs tracking-widest uppercase mb-1">Address Line 2</label>
+            <input type="text" name="address_line2" class="input-field" placeholder="Landmark (optional)">
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs tracking-widest uppercase mb-1">City *</label>
+              <input type="text" name="city" required class="input-field">
+            </div>
+            <div>
+              <label class="block text-xs tracking-widest uppercase mb-1">State *</label>
+              <input type="text" name="state" required class="input-field">
+            </div>
+            <div>
+              <label class="block text-xs tracking-widest uppercase mb-1">Pincode *</label>
+              <input type="text" name="pincode" required class="input-field" maxlength="6" pattern="\d{6}">
+            </div>
+          </div>
+        </div>
+
+        <!-- Coupon -->
+        <div class="mt-8">
+          <h2 class="font-serif text-xl mb-4">Coupon Code</h2>
+          <form method="post" action="{% url 'orders:apply_coupon' %}" class="flex gap-3">
+            {% csrf_token %}
+            <input type="text" name="coupon_code" value="{{ coupon_code }}" placeholder="Enter code"
+                   class="input-field flex-1">
+            <button type="submit" class="btn-secondary px-4 whitespace-nowrap">Apply</button>
+          </form>
+          {% if coupon_error %}<p class="text-xs text-red-600 mt-1">{{ coupon_error }}</p>{% endif %}
+          {% if discount %}<p class="text-xs text-taupe mt-1">Coupon applied — ₹{{ discount|floatformat:0 }} off</p>{% endif %}
+        </div>
+
+        <div id="form-error" class="hidden mt-4 px-4 py-3 border border-red-300 bg-red-50 text-red-700 text-sm"></div>
+
+        <button type="button" id="pay-btn" class="btn-primary w-full mt-8">
+          Pay ₹{{ total|floatformat:0 }} Securely
+        </button>
+        <p class="text-xs text-espresso/40 text-center mt-2">Powered by Razorpay. Your payment is secure.</p>
+      </form>
+    </div>
+
+    <!-- Order summary -->
+    <div class="lg:col-span-2">
+      <div class="bg-sand/30 border border-sand p-6">
+        <h2 class="font-serif text-xl mb-4">Order Summary</h2>
+        <div class="space-y-3 mb-4">
+          {% for item in cart_items %}
+          <div class="flex justify-between text-sm">
+            <span class="flex-1 pr-2">{{ item.variant.product.name }}<br>
+              <span class="text-xs text-espresso/50">{{ item.variant.size }}{% if item.variant.color %} / {{ item.variant.color }}{% endif %} × {{ item.quantity }}</span>
+            </span>
+            <span class="flex-shrink-0">₹{{ item.line_total|floatformat:0 }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="border-t border-sand pt-3 space-y-1 text-sm">
+          <div class="flex justify-between">
+            <span>Subtotal</span><span>₹{{ subtotal|floatformat:0 }}</span>
+          </div>
+          {% if discount %}
+          <div class="flex justify-between text-taupe">
+            <span>Discount</span><span>−₹{{ discount|floatformat:0 }}</span>
+          </div>
+          {% endif %}
+          <div class="flex justify-between font-medium text-base pt-2 border-t border-sand">
+            <span>Total</span><span>₹{{ total|floatformat:0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('pay-btn').addEventListener('click', function() {
+  var form = document.getElementById('checkout-form');
+  var errorDiv = document.getElementById('form-error');
+  errorDiv.classList.add('hidden');
+
+  // Client-side validation
+  var required = form.querySelectorAll('[required]');
+  var valid = true;
+  required.forEach(function(el) {
+    if (!el.value.trim()) { el.classList.add('border-red-400'); valid = false; }
+    else { el.classList.remove('border-red-400'); }
+  });
+  if (!valid) {
+    errorDiv.textContent = 'Please fill in all required fields.';
+    errorDiv.classList.remove('hidden');
+    return;
+  }
+
+  var btn = this;
+  btn.disabled = true;
+  btn.textContent = 'Processing…';
+
+  var formData = new FormData(form);
+  fetch('{% url "orders:payment_create" %}', {
+    method: 'POST',
+    headers: {'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value},
+    body: formData,
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) {
+      errorDiv.textContent = data.error;
+      errorDiv.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Pay ₹{{ total|floatformat:0 }} Securely';
+      return;
+    }
+    var options = {
+      key: data.key_id,
+      amount: data.amount,
+      currency: data.currency,
+      order_id: data.razorpay_order_id,
+      name: '{{ store.brand_name }}',
+      description: 'Order ' + data.order_number,
+      handler: function(response) {
+        var verifyForm = document.createElement('form');
+        verifyForm.method = 'POST';
+        verifyForm.action = '{% url "orders:payment_verify" %}';
+        var fields = {
+          csrfmiddlewaretoken: form.querySelector('[name=csrfmiddlewaretoken]').value,
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+        };
+        Object.keys(fields).forEach(function(k) {
+          var input = document.createElement('input');
+          input.type = 'hidden'; input.name = k; input.value = fields[k];
+          verifyForm.appendChild(input);
+        });
+        document.body.appendChild(verifyForm);
+        verifyForm.submit();
+      },
+      modal: {
+        ondismiss: function() {
+          btn.disabled = false;
+          btn.textContent = 'Pay ₹{{ total|floatformat:0 }} Securely';
+        }
+      },
+      theme: { color: '#A47C63' },
+    };
+    var rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(response) {
+      errorDiv.textContent = 'Payment failed: ' + response.error.description;
+      errorDiv.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Retry Payment';
+    });
+    rzp.open();
+  })
+  .catch(function() {
+    errorDiv.textContent = 'Something went wrong. Please try again.';
+    errorDiv.classList.remove('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Pay ₹{{ total|floatformat:0 }} Securely';
+  });
+});
+</script>
+{% endblock %}

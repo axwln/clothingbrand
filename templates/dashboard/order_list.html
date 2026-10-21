@@ -1,0 +1,58 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Orders{% endblock %}
+{% block page_title %}Orders{% endblock %}
+
+{% block content %}
+<div class="flex flex-wrap gap-3 mb-6">
+  <form method="get" class="flex gap-2">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search orders…" class="input-field w-56">
+    <select name="status" class="input-field w-40">
+      <option value="">All Statuses</option>
+      {% for val, label in status_choices %}
+        <option value="{{ val }}" {% if current_status == val %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-secondary px-4">Filter</button>
+  </form>
+</div>
+
+<div class="bg-white border border-sand">
+  <table class="w-full text-sm">
+    <thead class="border-b border-sand text-xs tracking-widest uppercase text-espresso/50">
+      <tr>
+        <th class="text-left px-4 py-3">Order</th>
+        <th class="text-left px-4 py-3">Customer</th>
+        <th class="text-left px-4 py-3">Total</th>
+        <th class="text-left px-4 py-3">Status</th>
+        <th class="text-left px-4 py-3">Date</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-sand">
+      {% for order in page_obj %}
+      <tr class="hover:bg-ivory/50">
+        <td class="px-4 py-3 font-mono text-xs">{{ order.order_number }}</td>
+        <td class="px-4 py-3">{{ order.customer_name }}<br><span class="text-xs text-espresso/50">{{ order.customer_phone }}</span></td>
+        <td class="px-4 py-3">₹{{ order.total|floatformat:0 }}</td>
+        <td class="px-4 py-3">
+          <span class="text-xs px-2 py-0.5 bg-sand">{{ order.get_status_display }}</span>
+        </td>
+        <td class="px-4 py-3 text-xs text-espresso/50">{{ order.created_at|date:"d M Y" }}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'core:order_detail' order.pk %}" class="text-xs text-taupe hover:text-espresso">View →</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="px-4 py-8 text-center text-espresso/40">No orders found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.has_other_pages %}
+  <div class="px-4 py-3 border-t border-sand flex gap-2 text-xs">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&q={{ query }}&status={{ current_status }}" class="text-taupe">← Prev</a>{% endif %}
+    <span class="text-espresso/40">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&q={{ query }}&status={{ current_status }}" class="text-taupe">Next →</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

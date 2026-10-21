@@ -1,0 +1,30 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Images — {{ product.name }}{% endblock %}
+{% block page_title %}Images — {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl">
+  <form method="post" enctype="multipart/form-data" class="bg-white border border-sand p-6 mb-6">
+    {% csrf_token %}
+    <label class="block text-xs tracking-widest uppercase mb-2">Upload Images (JPEG, PNG, WebP — max 5 MB each)</label>
+    <input type="file" name="images" multiple accept="image/jpeg,image/png,image/webp"
+           class="block w-full text-sm text-espresso/60 file:mr-4 file:py-2 file:px-4 file:border file:border-sand file:text-xs file:bg-ivory hover:file:bg-sand">
+    <button type="submit" class="btn-primary mt-4">Upload</button>
+  </form>
+
+  <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+    {% for img in product.images.all %}
+    <div class="relative group">
+      <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-full aspect-square object-cover">
+      <form method="post" action="{% url 'core:product_image_delete' product.pk img.pk %}"
+            class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        {% csrf_token %}
+        <button type="submit" class="bg-red-600 text-white text-xs px-2 py-1 hover:bg-red-700">✕</button>
+      </form>
+    </div>
+    {% empty %}
+    <p class="col-span-4 text-sm text-espresso/40 py-4">No images uploaded yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

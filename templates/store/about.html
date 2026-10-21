@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}About Us — {{ store.brand_name }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+  <h1 class="font-serif text-4xl mb-8">About {{ store.brand_name }}</h1>
+  {% if store.about_text %}
+    <div class="prose prose-sm text-espresso/70 leading-relaxed space-y-4">
+      {{ store.about_text|linebreaks }}
+    </div>
+  {% else %}
+    <p class="text-espresso/50">Our story is coming soon.</p>
+  {% endif %}
+  {% if store.contact_email or store.contact_phone %}
+  <div class="mt-12 border-t border-sand pt-8">
+    <h2 class="font-serif text-2xl mb-4">Get in Touch</h2>
+    {% if store.contact_email %}<p class="text-sm mb-1">{{ store.contact_email }}</p>{% endif %}
+    {% if store.contact_phone %}<p class="text-sm">{{ store.contact_phone }}</p>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

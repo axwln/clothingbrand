@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Search — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+  <form method="get" action="{% url 'store:search' %}" class="flex gap-3 mb-10 max-w-xl">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search products…"
+           class="input-field flex-1" autofocus>
+    <button type="submit" class="btn-primary px-6">Search</button>
+  </form>
+
+  {% if query %}
+    {% if products %}
+      <p class="text-sm text-espresso/50 mb-6">{{ products|length }} result{{ products|length|pluralize }} for "{{ query }}"</p>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for product in products %}
+          {% include "store/_product_card.html" %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center py-16 text-espresso/40">
+        <p class="font-serif text-2xl mb-2">No results for "{{ query }}"</p>
+        <p class="text-sm">Try different keywords or browse our collection.</p>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

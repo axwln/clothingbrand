@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ store.brand_name }}{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/main.css">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-ivory text-espresso font-sans min-h-screen flex flex-col">
+
+  <!-- Navigation -->
+  <header class="border-b border-sand sticky top-0 bg-ivory z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between h-16">
+
+        <!-- Mobile menu button -->
+        <button id="menu-toggle" class="sm:hidden p-2" aria-label="Menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+        <!-- Logo -->
+        <a href="{% url 'store:home' %}" class="font-serif text-2xl tracking-wide">
+          {% if store.logo %}
+            <img src="{{ store.logo.url }}" alt="{{ store.brand_name }}" class="h-8">
+          {% else %}
+            {{ store.brand_name }}
+          {% endif %}
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden sm:flex items-center gap-8 text-xs tracking-widest uppercase">
+          <a href="{% url 'store:product_list' %}" class="hover:text-taupe transition-colors">Shop</a>
+          <a href="{% url 'store:product_list' %}?category=" class="hover:text-taupe transition-colors">Collections</a>
+          <a href="{% url 'store:about' %}" class="hover:text-taupe transition-colors">About</a>
+          <a href="{% url 'store:contact' %}" class="hover:text-taupe transition-colors">Contact</a>
+        </nav>
+
+        <!-- Cart & Search -->
+        <div class="flex items-center gap-4">
+          <a href="{% url 'store:search' %}" class="p-2 hover:text-taupe transition-colors" aria-label="Search">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+            </svg>
+          </a>
+          <a href="{% url 'store:cart_detail' %}" class="relative p-2 hover:text-taupe transition-colors" aria-label="Cart">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+            </svg>
+            {% if cart_count %}
+              <span class="absolute -top-0.5 -right-0.5 bg-taupe text-ivory text-xs w-4 h-4 rounded-full flex items-center justify-center leading-none">{{ cart_count }}</span>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <nav id="mobile-menu" class="hidden sm:hidden border-t border-sand bg-ivory px-4 py-4 space-y-3 text-xs tracking-widest uppercase">
+      <a href="{% url 'store:product_list' %}" class="block hover:text-taupe">Shop</a>
+      <a href="{% url 'store:about' %}" class="block hover:text-taupe">About</a>
+      <a href="{% url 'store:contact' %}" class="block hover:text-taupe">Contact</a>
+    </nav>
+  </header>
+
+  <!-- Messages -->
+  {% if messages %}
+    <div class="max-w-7xl mx-auto px-4 pt-4 w-full">
+      {% for message in messages %}
+        <div class="mb-2 px-4 py-3 text-sm border {% if message.tags == 'error' %}border-red-300 bg-red-50 text-red-700{% else %}border-sand bg-sand/30 text-espresso{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-sand mt-16 bg-espresso text-ivory/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-xs tracking-wide">
+      <div class="col-span-2 sm:col-span-1">
+        <p class="font-serif text-xl text-ivory mb-3">{{ store.brand_name }}</p>
+        <p class="leading-relaxed">{{ store.tagline }}</p>
+      </div>
+      <div>
+        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Shop</p>
+        <ul class="space-y-2">
+          <li><a href="{% url 'store:product_list' %}" class="hover:text-ivory transition-colors">All Products</a></li>
+          <li><a href="{% url 'store:about' %}" class="hover:text-ivory transition-colors">About Us</a></li>
+          <li><a href="{% url 'store:contact' %}" class="hover:text-ivory transition-colors">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Help</p>
+        <ul class="space-y-2">
+          <li><a href="{% url 'store:shipping' %}" class="hover:text-ivory transition-colors">Shipping</a></li>
+          <li><a href="{% url 'store:returns' %}" class="hover:text-ivory transition-colors">Returns</a></li>
+          <li><a href="{% url 'orders:order_lookup' %}" class="hover:text-ivory transition-colors">Track Order</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Legal</p>
+        <ul class="space-y-2">
+          <li><a href="{% url 'store:privacy' %}" class="hover:text-ivory transition-colors">Privacy Policy</a></li>
+          <li><a href="{% url 'store:terms' %}" class="hover:text-ivory transition-colors">Terms</a></li>
+        </ul>
+        {% if store.contact_phone %}
+          <p class="mt-4">{{ store.contact_phone }}</p>
+        {% endif %}
+        {% if store.contact_email %}
+          <p>{{ store.contact_email }}</p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="border-t border-ivory/10 text-center py-4 text-xs text-ivory/40">
+      &copy; {% now "Y" %} {{ store.brand_name }}. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

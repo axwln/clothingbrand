@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}{% if page_title %}{{ page_title }}{% else %}All Products{% endif %} — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <h1 class="font-serif text-3xl">{% if page_title %}{{ page_title }}{% else %}All Products{% endif %}</h1>
+    <div class="flex items-center gap-3">
+      <select onchange="window.location.href=this.value"
+              class="text-xs tracking-wide border border-sand bg-ivory px-3 py-2 focus:outline-none focus:border-taupe">
+        <option value="?{% if current_category %}category={{ current_category }}&{% endif %}sort=newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest</option>
+        <option value="?{% if current_category %}category={{ current_category }}&{% endif %}sort=price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+        <option value="?{% if current_category %}category={{ current_category }}&{% endif %}sort=price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="flex gap-8">
+    <!-- Sidebar filters -->
+    <aside class="hidden sm:block w-44 flex-shrink-0">
+      <p class="text-xs tracking-widest uppercase mb-4">Categories</p>
+      <ul class="space-y-2 text-sm">
+        <li>
+          <a href="{% url 'store:product_list' %}"
+             class="{% if not current_category %}text-taupe font-medium{% else %}text-espresso/60 hover:text-espresso{% endif %} transition-colors">
+            All
+          </a>
+        </li>
+        {% for cat in categories %}
+        <li>
+          <a href="{% url 'store:product_list' %}?category={{ cat.slug }}"
+             class="{% if current_category == cat.slug %}text-taupe font-medium{% else %}text-espresso/60 hover:text-espresso{% endif %} transition-colors">
+            {{ cat.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <!-- Product grid -->
+    <div class="flex-1">
+      {% if products %}
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {% for product in products %}
+            {% include "store/_product_card.html" %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="text-center py-24 text-espresso/40">
+          <p class="font-serif text-2xl mb-2">No products found</p>
+          <p class="text-sm">Try a different category or check back soon.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

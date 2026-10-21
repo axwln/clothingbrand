@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Track Order — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-16">
+  <h1 class="font-serif text-3xl mb-8">Track Your Order</h1>
+  <form method="post" class="space-y-4 mb-8">
+    {% csrf_token %}
+    <div>
+      <label class="block text-xs tracking-widest uppercase mb-1">Order Number</label>
+      <input type="text" name="order_number" required class="input-field" placeholder="MSN12345678">
+    </div>
+    <div>
+      <label class="block text-xs tracking-widest uppercase mb-1">Phone Number</label>
+      <input type="tel" name="customer_phone" required class="input-field" placeholder="+91 98765 43210">
+    </div>
+    <button type="submit" class="btn-primary w-full">Find Order</button>
+  </form>
+
+  {% if error %}
+    <p class="text-sm text-red-600">{{ error }}</p>
+  {% endif %}
+
+  {% if order %}
+  <div class="border border-sand p-6">
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <p class="font-medium">{{ order.order_number }}</p>
+        <p class="text-xs text-espresso/50">{{ order.created_at|date:"d M Y" }}</p>
+      </div>
+      <span class="text-xs tracking-widest uppercase px-3 py-1 bg-sand text-espresso">{{ order.get_status_display }}</span>
+    </div>
+    <div class="space-y-2 text-sm">
+      {% for item in order.items.all %}
+      <div class="flex justify-between">
+        <span>{{ item.product_name }} ({{ item.size }}) × {{ item.quantity }}</span>
+        <span>₹{{ item.line_total|floatformat:0 }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="border-t border-sand mt-3 pt-3 flex justify-between font-medium text-sm">
+      <span>Total</span><span>₹{{ order.total|floatformat:0 }}</span>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

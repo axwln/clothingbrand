@@ -1,0 +1,46 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Variants — {{ product.name }}{% endblock %}
+{% block page_title %}Variants — {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <a href="{% url 'core:product_edit' product.pk %}" class="text-xs text-taupe hover:text-espresso">← Back to {{ product.name }}</a>
+  <a href="{% url 'core:variant_create' product.pk %}" class="btn-primary">+ Add Variant</a>
+</div>
+<div class="bg-white border border-sand">
+  <table class="w-full text-sm">
+    <thead class="border-b border-sand text-xs tracking-widest uppercase text-espresso/50">
+      <tr>
+        <th class="text-left px-4 py-3">SKU</th>
+        <th class="text-left px-4 py-3">Size</th>
+        <th class="text-left px-4 py-3">Colour</th>
+        <th class="text-left px-4 py-3">Stock</th>
+        <th class="text-left px-4 py-3">Active</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-sand">
+      {% for v in variants %}
+      <tr class="hover:bg-ivory/50">
+        <td class="px-4 py-3 font-mono text-xs">{{ v.sku }}</td>
+        <td class="px-4 py-3">{{ v.size }}</td>
+        <td class="px-4 py-3">{{ v.color|default:"—" }}</td>
+        <td class="px-4 py-3">
+          <span class="{% if v.stock == 0 %}text-red-600{% elif v.stock <= 5 %}text-amber-600{% endif %}">{{ v.stock }}</span>
+        </td>
+        <td class="px-4 py-3">{% if v.is_active %}✓{% else %}—{% endif %}</td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'core:variant_edit' v.pk %}" class="text-xs text-taupe hover:text-espresso mr-3">Edit</a>
+          <form method="post" action="{% url 'core:variant_delete' v.pk %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="text-xs text-red-500 hover:text-red-700">Deactivate</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="px-4 py-8 text-center text-espresso/40">No variants yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

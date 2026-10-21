@@ -1,0 +1,30 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Banners{% endblock %}
+{% block page_title %}Banners{% endblock %}
+{% block content %}
+<div class="flex justify-end mb-4">
+  <a href="{% url 'core:banner_create' %}" class="btn-primary">+ New Banner</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+  {% for banner in banners %}
+  <div class="bg-white border border-sand overflow-hidden">
+    <div class="aspect-video bg-sand overflow-hidden">
+      <img src="{{ banner.image.url }}" alt="{{ banner.title }}" class="w-full h-full object-cover">
+    </div>
+    <div class="p-4">
+      <p class="font-medium text-sm">{{ banner.title }}</p>
+      <p class="text-xs text-espresso/50 mt-0.5">Order: {{ banner.order }} · {% if banner.is_active %}Active{% else %}Hidden{% endif %}</p>
+      <div class="flex gap-3 mt-3">
+        <a href="{% url 'core:banner_edit' banner.pk %}" class="text-xs text-taupe hover:text-espresso">Edit</a>
+        <form method="post" action="{% url 'core:banner_delete' banner.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="text-xs text-red-500 hover:text-red-700">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="col-span-3 text-sm text-espresso/40 py-8">No banners yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

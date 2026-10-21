@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-10 lg:gap-16">
+
+    <!-- Images -->
+    <div>
+      <div class="aspect-[3/4] bg-sand overflow-hidden mb-3" id="main-image-wrap">
+        {% if images %}
+          <img id="main-image" src="{{ images.0.image.url }}" alt="{{ images.0.alt_text|default:product.name }}"
+               class="w-full h-full object-cover">
+        {% else %}
+          <div class="w-full h-full flex items-center justify-center text-espresso/20">
+            <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+          </div>
+        {% endif %}
+      </div>
+      {% if images|length > 1 %}
+      <div class="grid grid-cols-4 gap-2">
+        {% for img in images %}
+          <button onclick="document.getElementById('main-image').src='{{ img.image.url }}'"
+                  class="aspect-square overflow-hidden bg-sand border-2 border-transparent hover:border-taupe transition-colors">
+            <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="w-full h-full object-cover">
+          </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Details -->
+    <div class="flex flex-col">
+      <p class="text-xs tracking-widest uppercase text-taupe mb-2">{{ product.category.name }}</p>
+      <h1 class="font-serif text-3xl sm:text-4xl mb-4">{{ product.name }}</h1>
+
+      <!-- Price -->
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-2xl font-medium">₹{{ product.effective_price|floatformat:0 }}</span>
+        {% if product.discount_percent %}
+          <span class="text-base text-espresso/40 line-through">₹{{ product.base_price|floatformat:0 }}</span>
+          <span class="text-sm bg-taupe/10 text-taupe px-2 py-0.5">{{ product.discount_percent }}% off</span>
+        {% endif %}
+      </div>
+
+      <!-- Add to cart form -->
+      <form method="post" action="{% url 'store:cart_add' 0 %}" id="add-to-cart-form">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+
+        <!-- Variant selector -->
+        {% if variants %}
+        <div class="mb-6">
+          <p class="text-xs tracking-widest uppercase mb-3">Select Size & Colour</p>
+          <div class="space-y-2" id="variant-options">
+            {% for variant in variants %}
+            <label class="flex items-center gap-3 cursor-pointer group">
+              <input type="radio" name="variant_id" value="{{ variant.pk }}"
+                     class="sr-only peer"
+                     {% if forloop.first %}checked{% endif %}
+                     {% if variant.stock == 0 %}disabled{% endif %}>
+              <span class="flex-1 border border-sand px-4 py-2 text-sm peer-checked:border-espresso peer-checked:bg-espresso peer-checked:text-ivory transition-colors
+                           {% if variant.stock == 0 %}opacity-40 line-through cursor-not-allowed{% endif %}">
+                {{ variant.size }}{% if variant.color %} / {{ variant.color }}{% endif %}
+                {% if variant.stock == 0 %} — Out of stock{% elif variant.stock <= 3 %} — Only {{ variant.stock }} left{% endif %}
+              </span>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <button type="submit" id="add-btn" class="btn-primary w-full mb-3">Add to Cart</button>
+      </form>
+
+      <!-- Description -->
+      {% if product.description %}
+      <div class="border-t border-sand pt-6 mt-2">
+        <p class="text-xs tracking-widest uppercase mb-3">Description</p>
+        <p class="text-sm leading-relaxed text-espresso/70">{{ product.description }}</p>
+      </div>
+      {% endif %}
+
+      {% if product.care_instructions %}
+      <div class="border-t border-sand pt-6 mt-4">
+        <p class="text-xs tracking-widest uppercase mb-3">Care</p>
+        <p class="text-sm leading-relaxed text-espresso/70">{{ product.care_instructions }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Update form action based on selected variant
+  document.querySelectorAll('input[name="variant_id"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      var form = document.getElementById('add-to-cart-form');
+      form.action = '/cart/add/' + this.value + '/';
+    });
+  });
+  // Set initial action
+  var checked = document.querySelector('input[name="variant_id"]:checked');
+  if (checked) {
+    document.getElementById('add-to-cart-form').action = '/cart/add/' + checked.value + '/';
+  }
+</script>
+{% endblock %}

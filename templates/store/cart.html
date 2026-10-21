@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Your Cart — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+  <h1 class="font-serif text-3xl mb-8">Your Cart</h1>
+
+  {% if cart_items %}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Items -->
+    <div class="lg:col-span-2 space-y-4">
+      {% for item in cart_items %}
+      <div class="flex gap-4 border-b border-sand pb-4">
+        <div class="w-20 h-24 bg-sand flex-shrink-0 overflow-hidden">
+          {% if item.variant.product.primary_image %}
+            <img src="{{ item.variant.product.primary_image.image.url }}" alt="{{ item.variant.product.name }}"
+                 class="w-full h-full object-cover">
+          {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-sm leading-snug">{{ item.variant.product.name }}</p>
+          <p class="text-xs text-espresso/50 mt-0.5">{{ item.variant.size }}{% if item.variant.color %} / {{ item.variant.color }}{% endif %}</p>
+          <p class="text-sm mt-1">₹{{ item.price|floatformat:0 }}</p>
+          <div class="flex items-center gap-3 mt-2">
+            <form method="post" action="{% url 'store:cart_update' item.variant.pk %}" class="flex items-center gap-2">
+              {% csrf_token %}
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="0" max="{{ item.variant.stock }}"
+                     class="w-14 border border-sand text-center text-sm py-1 focus:outline-none focus:border-taupe">
+              <button type="submit" class="text-xs text-taupe hover:text-espresso transition-colors">Update</button>
+            </form>
+            <form method="post" action="{% url 'store:cart_remove' item.variant.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="text-xs text-espresso/40 hover:text-espresso transition-colors">Remove</button>
+            </form>
+          </div>
+        </div>
+        <div class="text-sm font-medium flex-shrink-0">₹{{ item.line_total|floatformat:0 }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Summary -->
+    <div class="bg-sand/30 border border-sand p-6 h-fit">
+      <h2 class="font-serif text-xl mb-4">Summary</h2>
+      <div class="flex justify-between text-sm mb-2">
+        <span>Subtotal</span>
+        <span>₹{{ subtotal|floatformat:0 }}</span>
+      </div>
+      <div class="flex justify-between text-sm mb-4 text-espresso/50">
+        <span>Shipping</span>
+        <span>Calculated at checkout</span>
+      </div>
+      <div class="border-t border-sand pt-4 flex justify-between font-medium mb-6">
+        <span>Total</span>
+        <span>₹{{ subtotal|floatformat:0 }}</span>
+      </div>
+      <a href="{% url 'orders:checkout' %}" class="btn-primary block text-center">Proceed to Checkout</a>
+      <a href="{% url 'store:product_list' %}" class="block text-center text-xs tracking-widest uppercase mt-3 text-espresso/50 hover:text-espresso transition-colors">Continue Shopping</a>
+    </div>
+  </div>
+
+  {% else %}
+  <div class="text-center py-24 text-espresso/40">
+    <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+    </svg>
+    <p class="font-serif text-2xl mb-2">Your cart is empty</p>
+    <p class="text-sm mb-6">Discover our collection and add something beautiful.</p>
+    <a href="{% url 'store:product_list' %}" class="btn-primary">Shop Now</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

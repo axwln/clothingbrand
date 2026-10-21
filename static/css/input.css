@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-ivory text-espresso font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-espresso text-ivory px-6 py-3 text-sm tracking-widest uppercase hover:bg-taupe transition-colors duration-200;
+  }
+  .btn-secondary {
+    @apply border border-espresso text-espresso px-6 py-3 text-sm tracking-widest uppercase hover:bg-espresso hover:text-ivory transition-colors duration-200;
+  }
+  .input-field {
+    @apply w-full border border-sand bg-white px-4 py-3 text-sm focus:outline-none focus:border-taupe transition-colors duration-200;
+  }
+  .product-card {
+    @apply cursor-pointer;
+  }
+  .product-card img {
+    @apply w-full object-cover transition-transform duration-500;
+  }
+}

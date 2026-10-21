@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if page == "privacy" %}Privacy Policy
+  {% elif page == "shipping" %}Shipping Policy
+  {% elif page == "returns" %}Returns Policy
+  {% else %}Terms & Conditions
+  {% endif %} — {{ store.brand_name }}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+  <h1 class="font-serif text-4xl mb-8">
+    {% if page == "privacy" %}Privacy Policy
+    {% elif page == "shipping" %}Shipping Policy
+    {% elif page == "returns" %}Returns Policy
+    {% else %}Terms & Conditions
+    {% endif %}
+  </h1>
+  <div class="text-sm text-espresso/70 leading-relaxed space-y-4">
+    {% if page == "privacy" %}{{ store.privacy_policy|linebreaks|default:"Privacy policy coming soon." }}
+    {% elif page == "shipping" %}{{ store.shipping_policy|linebreaks|default:"Shipping policy coming soon." }}
+    {% elif page == "returns" %}{{ store.returns_policy|linebreaks|default:"Returns policy coming soon." }}
+    {% else %}{{ store.terms|linebreaks|default:"Terms and conditions coming soon." }}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

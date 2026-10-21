@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Order {{ order.order_number }} — {{ store.brand_name }}{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-16">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="font-serif text-3xl">Order {{ order.order_number }}</h1>
+    <span class="text-xs tracking-widest uppercase px-3 py-1 bg-sand">{{ order.get_status_display }}</span>
+  </div>
+  <div class="border border-sand p-6 space-y-4 text-sm">
+    {% for item in order.items.all %}
+    <div class="flex justify-between">
+      <span>{{ item.product_name }} ({{ item.size }}{% if item.color %} / {{ item.color }}{% endif %}) × {{ item.quantity }}</span>
+      <span>₹{{ item.line_total|floatformat:0 }}</span>
+    </div>
+    {% endfor %}
+    <div class="border-t border-sand pt-3 flex justify-between font-medium">
+      <span>Total</span><span>₹{{ order.total|floatformat:0 }}</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

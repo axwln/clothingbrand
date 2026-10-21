@@ -1,0 +1,56 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+  <form method="get" class="flex gap-2">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search products…"
+           class="input-field w-64">
+    <button type="submit" class="btn-secondary px-4">Search</button>
+  </form>
+  <a href="{% url 'core:product_create' %}" class="btn-primary">+ New Product</a>
+</div>
+
+<div class="bg-white border border-sand">
+  <table class="w-full text-sm">
+    <thead class="border-b border-sand text-xs tracking-widest uppercase text-espresso/50">
+      <tr>
+        <th class="text-left px-4 py-3">Product</th>
+        <th class="text-left px-4 py-3">Category</th>
+        <th class="text-left px-4 py-3">Price</th>
+        <th class="text-left px-4 py-3">Status</th>
+        <th class="px-4 py-3"></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-sand">
+      {% for product in page_obj %}
+      <tr class="hover:bg-ivory/50">
+        <td class="px-4 py-3 font-medium">{{ product.name }}</td>
+        <td class="px-4 py-3 text-espresso/60">{{ product.category.name }}</td>
+        <td class="px-4 py-3">₹{{ product.base_price|floatformat:0 }}{% if product.sale_price %} <span class="text-taupe text-xs">/ ₹{{ product.sale_price|floatformat:0 }}</span>{% endif %}</td>
+        <td class="px-4 py-3">
+          <span class="text-xs px-2 py-0.5 {% if product.is_active %}bg-green-100 text-green-700{% else %}bg-sand text-espresso/50{% endif %}">
+            {% if product.is_active %}Active{% else %}Archived{% endif %}
+          </span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'core:product_edit' product.pk %}" class="text-xs text-taupe hover:text-espresso mr-3">Edit</a>
+          <a href="{% url 'core:product_images' product.pk %}" class="text-xs text-taupe hover:text-espresso mr-3">Images</a>
+          <a href="{% url 'core:variant_list' product.pk %}" class="text-xs text-taupe hover:text-espresso">Variants</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="px-4 py-8 text-center text-espresso/40">No products found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if page_obj.has_other_pages %}
+  <div class="px-4 py-3 border-t border-sand flex gap-2 text-xs">
+    {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&q={{ query }}" class="text-taupe">← Prev</a>{% endif %}
+    <span class="text-espresso/40">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&q={{ query }}" class="text-taupe">Next →</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

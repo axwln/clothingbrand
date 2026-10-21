@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{{ store.brand_name }} — Luxury Women's Fashion{% endblock %}
+
+{% block content %}
+
+<!-- Hero Banner -->
+{% if banners %}
+  {% with banners.0 as banner %}
+  <section class="relative overflow-hidden bg-sand" style="min-height: 85vh;">
+    <img src="{{ banner.image.url }}" alt="{{ banner.title }}"
+         class="absolute inset-0 w-full h-full object-cover object-center opacity-80">
+    <div class="relative z-10 flex flex-col items-center justify-center text-center h-full min-h-[85vh] px-4">
+      <p class="text-xs tracking-[0.3em] uppercase text-espresso/70 mb-4">New Collection</p>
+      <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6 leading-tight">{{ banner.title }}</h1>
+      {% if banner.subtitle %}
+        <p class="text-espresso/70 text-lg mb-8 max-w-md">{{ banner.subtitle }}</p>
+      {% endif %}
+      {% if banner.link_url %}
+        <a href="{{ banner.link_url }}" class="btn-primary">{{ banner.link_text }}</a>
+      {% endif %}
+    </div>
+  </section>
+  {% endwith %}
+{% else %}
+  <!-- Default hero when no banner is set -->
+  <section class="bg-sand flex flex-col items-center justify-center text-center px-4 py-32">
+    <p class="text-xs tracking-[0.3em] uppercase text-espresso/60 mb-4">Curated for You</p>
+    <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6">Effortless Elegance</h1>
+    <p class="text-espresso/60 text-lg mb-8 max-w-md">Discover our curated collection of luxury women's fashion.</p>
+    <a href="{% url 'store:product_list' %}" class="btn-primary">Explore Collection</a>
+  </section>
+{% endif %}
+
+<!-- Categories -->
+{% if categories %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+  <h2 class="font-serif text-3xl text-center mb-10">Shop by Category</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+    {% for category in categories %}
+    <a href="{% url 'store:category_detail' category.slug %}" class="group relative overflow-hidden aspect-square bg-sand">
+      {% if category.image %}
+        <img src="{{ category.image.url }}" alt="{{ category.name }}"
+             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+      {% endif %}
+      <div class="absolute inset-0 bg-espresso/20 group-hover:bg-espresso/30 transition-colors duration-300 flex items-end p-4">
+        <span class="text-ivory font-serif text-lg">{{ category.name }}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Featured Products -->
+{% if featured_products %}
+<section class="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-20">
+  <div class="flex items-baseline justify-between mb-10">
+    <h2 class="font-serif text-3xl">Featured Pieces</h2>
+    <a href="{% url 'store:product_list' %}" class="text-xs tracking-widest uppercase text-taupe hover:text-espresso transition-colors">View All →</a>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+    {% for product in featured_products %}
+      {% include "store/_product_card.html" %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Brand strip -->
+<section class="bg-espresso text-ivory text-center py-16 px-4">
+  <p class="text-xs tracking-[0.3em] uppercase text-ivory/50 mb-3">Our Promise</p>
+  <h2 class="font-serif text-3xl sm:text-4xl mb-4">Crafted with Intention</h2>
+  <p class="text-ivory/60 max-w-xl mx-auto text-sm leading-relaxed">
+    Every piece in our collection is thoughtfully designed for the modern woman — timeless, refined, and made to last.
+  </p>
+</section>
+
+{% endblock %}
