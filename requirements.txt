@@ -5,3 +5,4 @@ razorpay
 python-dotenv
 django-ratelimit
 whitenoise
+dj-database-url
