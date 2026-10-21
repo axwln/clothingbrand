@@ -1,35 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}{{ store.brand_name }} — Luxury Women's Fashion{% endblock %}
 
 {% block content %}
 
 <!-- Hero Banner -->
-{% if banners %}
-  {% with banners.0 as banner %}
-  <section class="relative overflow-hidden bg-sand" style="min-height: 85vh;">
-    <img src="{{ banner.image.url }}" alt="{{ banner.title }}"
-         class="absolute inset-0 w-full h-full object-cover object-center opacity-80">
-    <div class="relative z-10 flex flex-col items-center justify-center text-center h-full min-h-[85vh] px-4">
-      <p class="text-xs tracking-[0.3em] uppercase text-espresso/70 mb-4">New Collection</p>
-      <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6 leading-tight">{{ banner.title }}</h1>
-      {% if banner.subtitle %}
-        <p class="text-espresso/70 text-lg mb-8 max-w-md">{{ banner.subtitle }}</p>
-      {% endif %}
-      {% if banner.link_url %}
-        <a href="{{ banner.link_url }}" class="btn-primary">{{ banner.link_text }}</a>
-      {% endif %}
-    </div>
-  </section>
-  {% endwith %}
-{% else %}
-  <!-- Default hero when no banner is set -->
-  <section class="bg-sand flex flex-col items-center justify-center text-center px-4 py-32">
-    <p class="text-xs tracking-[0.3em] uppercase text-espresso/60 mb-4">Curated for You</p>
-    <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6">Effortless Elegance</h1>
-    <p class="text-espresso/60 text-lg mb-8 max-w-md">Discover our curated collection of luxury women's fashion.</p>
+<section class="relative overflow-hidden bg-sand" style="min-height: 85vh;">
+  <img src="{% static 'images/banners/hero.jpg' %}" alt="New Collection"
+       class="absolute inset-0 w-full h-full object-cover object-center opacity-80">
+  <div class="relative z-10 flex flex-col items-center justify-center text-center h-full min-h-[85vh] px-4">
+    <p class="text-xs tracking-[0.3em] uppercase text-espresso/70 mb-4">New Collection</p>
+    <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6 leading-tight">Effortless Elegance</h1>
+    <p class="text-espresso/70 text-lg mb-8 max-w-md">Discover our curated collection of luxury women's fashion.</p>
     <a href="{% url 'store:product_list' %}" class="btn-primary">Explore Collection</a>
-  </section>
-{% endif %}
+  </div>
+</section>
 
 <!-- Categories -->
 {% if categories %}
@@ -38,9 +23,9 @@
   <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
     {% for category in categories %}
     <a href="{% url 'store:category_detail' category.slug %}" class="group relative overflow-hidden aspect-square bg-sand">
-      {% if category.image %}
-        <img src="{{ category.image.url }}" alt="{{ category.name }}"
-             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+      {% if category.slug == 'dresses' %}<img src="{% static 'images/categories/dresses.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+      {% elif category.slug == 'tops' %}<img src="{% static 'images/categories/tops.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+      {% elif category.slug == 'co-ords' %}<img src="{% static 'images/categories/coords.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
       {% endif %}
       <div class="absolute inset-0 bg-espresso/20 group-hover:bg-espresso/30 transition-colors duration-300 flex items-end p-4">
         <span class="text-ivory font-serif text-lg">{{ category.name }}</span>
