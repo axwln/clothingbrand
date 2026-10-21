@@ -1,3 +1,3 @@
 #!/bin/bash
-pip install -r requirements.txt --break-system-packages
+uv pip install -r requirements.txt --system
 python manage.py collectstatic --noinput --clear
