@@ -16,7 +16,6 @@ build/
 
 # Django
 *.sqlite3
-media/
 
 # Node
 node_modules/
