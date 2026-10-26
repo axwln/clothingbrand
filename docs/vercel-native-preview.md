@@ -55,3 +55,13 @@ No bucket, credentials or provider-specific media configuration is fabricated he
 - https://vercel.com/docs/project-configuration/vercel-json
 - https://github.com/vercel/vercel/tree/main/packages/python
 - https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html
+
+## Preview result — 2026-10-26
+
+- Initial preview commit: `e6caf949ad80148ce70c01bb902129827978829f`.
+- Vercel GitHub status for that commit: **success**.
+- Deployment: https://vercel.com/axwlns-projects/clothingbrand/9FS9eCdAYa76P3y8QkKavMAQzfD6
+- Branch preview: https://clothingbrand-git-fix-vercel-native-django-axwlns-projects.vercel.app/
+- Direct preview requests redirect to Vercel login. The deployment metadata API returns HTTP 403 without authentication. Remote homepage/category/CSS/product/login/checkout acceptance remains blocked by Preview Deployment Protection; the local manifest-only checks do not substitute for those checks.
+- **Actual deployed function size is not available from the public commit status.** Obtain it from authenticated Vercel build output. The 3.09 MB app-files measurement excludes installed dependencies and must not be reported as the full deployed bundle.
+- No production deployment, merge, database migration or media-storage switch was performed.
