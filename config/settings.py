@@ -122,3 +122,20 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5 * 1024 * 1024
 
 LOGIN_URL = "/dashboard/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
+
+# Send unhandled request tracebacks to private runtime logs with DEBUG=False.
+# Django's default console handler only runs while DEBUG=True.
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "runtime_errors": {"class": "logging.StreamHandler", "level": "ERROR"},
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["runtime_errors"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
