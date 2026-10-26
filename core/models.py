@@ -2,7 +2,7 @@ from django.db import models
 
 
 class StoreSettings(models.Model):
-    brand_name = models.CharField(max_length=100, default="Maison")
+    brand_name = models.CharField(max_length=100, default="DEVIKA CLOTHINGS")
     logo = models.ImageField(upload_to="brand/", blank=True)
     tagline = models.CharField(max_length=200, blank=True)
     about_text = models.TextField(blank=True)

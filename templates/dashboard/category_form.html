@@ -5,6 +5,7 @@
 <div class="max-w-lg">
   <form method="post" enctype="multipart/form-data" class="bg-white border border-sand p-6 space-y-4">
     {% csrf_token %}
+    {{ form.non_field_errors }}
     {% for field in form %}
     <div>
       <label class="block text-xs tracking-widest uppercase mb-1 text-espresso/60">{{ field.label }}</label>

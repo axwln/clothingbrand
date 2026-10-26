@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply bg-ivory text-espresso font-sans; }
+  .dark body { @apply bg-dark-bg text-dark-fg; }
+  h1, h2, h3, h4 { @apply font-serif; }
+  html { scroll-padding-top: 160px; }
+  [hidden] { display: none !important; }
+  :focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+  ::selection { background: #d6cbbb; color: #242320; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-espresso text-ivory px-7 py-3.5 text-xs tracking-widest uppercase inline-flex items-center justify-center gap-5;
+    border: 1px solid transparent;
+    transition: background-color .3s, color .3s, border-color .3s;
+  }
+  .btn-primary:hover { background-color: #6b5e4e; border-color: #a99a86; }
+  .btn-secondary { @apply border border-maroon text-maroon px-7 py-3.5 text-xs tracking-widest uppercase hover:bg-maroon hover:text-ivory transition-colors duration-300 inline-block; }
+  .btn-ghost { @apply border border-dark-line text-dark-fg px-7 py-3.5 text-xs tracking-widest uppercase hover:bg-white/10 transition-colors duration-300 inline-block; }
+  .input-field { @apply w-full border border-sand bg-white px-4 py-3 text-sm focus:border-taupe transition-colors duration-200 dark:bg-dark-card dark:border-dark-line dark:text-dark-fg; }
+  .glass-nav { @apply bg-ivory/95 dark:bg-dark-bg/95 border-b border-sand dark:border-dark-line; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); transition: box-shadow .3s; }
+  .glass-nav.scrolled { box-shadow: 0 4px 18px #2423200a; }
+  .header-main { display: flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 82px; position: relative; }
+  .header-brand { margin-right: auto; }
+  .brand-logo { display: inline-flex; align-items: center; flex-shrink: 0; width: 210px; max-width: 100%; }
+  .brand-logo img { width: 100%; height: auto; object-fit: contain; }
+  .brand-custom-image { aspect-ratio: 1300 / 732; }
+  .brand-art { display: flex; align-items: center; gap: 10px; width: 100%; }
+  .brand-symbol-frame { position: relative; display: block; overflow: hidden; flex: 0 0 34px; aspect-ratio: 670 / 720; }
+  .brand-wordmark-frame { position: relative; display: block; overflow: hidden; flex: 1; aspect-ratio: 1090 / 90; }
+  .brand-art .brand-leaf { position: absolute; width: 249.552%; max-width: none; height: auto; left: -80%; top: -5.556%; }
+  .brand-art .brand-wordmark { position: absolute; width: 153.395%; max-width: none; height: auto; left: -26.606%; top: -888.889%; }
+  .dark .brand-art, footer .brand-art, aside .brand-art { filter: invert(1); }
+  .hero-brand-name { display: inline-flex; flex-wrap: wrap; gap: .55em; }
+  .hero-brand-name > span { display: inline-block; }
+  .hero-eyebrow .hero-brand-name { padding: 0; opacity: 1; }
+  .brand-logo-fallback { font-size: 14px; line-height: 1.5; letter-spacing: .12em; }
+  footer .brand-logo { margin-bottom: 1rem; }
+  .desktop-links { column-gap: clamp(12px, 2vw, 30px); row-gap: 12px; }
+  .desktop-links a, .editorial-link { position: relative; }
+  .desktop-links a::after, .editorial-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .35s; }
+  .desktop-links a:hover::after, .desktop-links a:focus-visible::after, .editorial-link:hover::after, .editorial-link:focus-visible::after { transform: scaleX(1); }
+  #mobile-menu { overflow: hidden; max-height: calc(100svh - 115px); overflow-y: auto; }
+  .fashion-hero { position: relative; overflow: hidden; isolation: isolate; min-height: 580px; height: clamp(580px, 80svh, 960px); background: #51483e; color: #faf7f2; }
+  .hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+  .hero-shade { position: absolute; inset: 0; background: linear-gradient(90deg, #141410a8, #1414101a 85%), linear-gradient(0deg, #14141099, transparent 80%); }
+  .hero-copy { position: absolute; bottom: clamp(40px, 7vw, 110px); left: max(5vw, calc((100vw - 1280px) / 2)); right: 5vw; max-width: 720px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: .22em; line-height: 1.8; margin-bottom: 24px; }
+  .hero-eyebrow span { padding: 0 12px; opacity: .65; }
+  .fashion-hero h1 { font-size: clamp(54px, 7.5vw, 108px); line-height: 1.07; font-weight: 400; letter-spacing: -.035em; text-wrap: balance; overflow-wrap: break-word; }
+  .reveal-lines > span { display: block; }
+  .hero-italic { font-style: italic; }
+  .hero-description { font-size: clamp(14px, 1.3vw, 17px); line-height: 1.8; max-width: 400px; margin: 24px 0 28px; color: #faf7f2e6; }
+  .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; }
+  .hero-actions .btn-primary { background: #faf7f2; color: #242320; }
+  .hero-actions .btn-primary:hover { background: #e9e3d9; border-color: #faf7f2; }
+  .editorial-link { font-size: 12px; letter-spacing: .06em; }
+  .hero-caption { position: absolute; right: 4vw; bottom: 30px; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+  .collection-section { padding-top: clamp(64px, 8vw, 120px); padding-bottom: clamp(64px, 8vw, 120px); }
+  .collection-card { border-radius: 0 !important; }
+  .collection-card img { transition: transform .9s cubic-bezier(.22,1,.36,1); }
+  .product-card { min-width: 0; }
+  .product-photo { position: relative; }
+  .product-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s cubic-bezier(.22,1,.36,1), opacity .6s; }
+  .product-photo .product-secondary { position: absolute; inset: 0; opacity: 0; }
+  .product-image-overlay { position: absolute; inset: 0; background: #242320; opacity: 0; transition: opacity .6s; pointer-events: none; }
+  .product-labels { padding-top: 4px; }
+  .product-labels h3 { font-size: 17px; font-weight: 400; }
+  .product-card:focus-within .product-image-overlay { opacity: .04; }
+  .snap-rail { @apply flex gap-4 overflow-x-auto pb-2; scroll-snap-type: x mandatory; }
+  .snap-item { scroll-snap-align: start; flex: 0 0 calc(50% - 8px); }
+  @media (hover: hover) and (pointer: fine) {
+    .product-card:hover .product-photo img { transform: scale(1.035); }
+    .product-card:hover .product-secondary { opacity: 1; }
+    .product-card:hover .product-image-overlay { opacity: .035; }
+  }
+  @media (min-width: 640px) { .snap-item { flex: 0 0 calc(33.333% - 11px); } }
+  @media (min-width: 1024px) { .snap-item { flex: 0 0 calc(25% - 12px); } }
+  @media (max-width: 639px) {
+    .header-main { min-height: 70px; gap: 3px; }
+    .brand-symbol-frame { flex-basis: 25px; }
+    .brand-art { gap: 7px; }
+    .header-main > div:last-child { gap: 0; }
+    .header-main button { padding: 6px; }
+    .header-brand { margin: 0 auto; }
+    .brand-logo { width: clamp(150px, 43vw, 175px); }
+    .header-main > a { font-size: 12px; padding: 4px; }
+    .fashion-hero { min-height: 560px; height: 76svh; max-height: 820px; }
+    .hero-copy { left: 24px; right: 24px; bottom: 55px; }
+    .hero-eyebrow { font-size: 9px; letter-spacing: .14em; }
+    .hero-caption { right: 24px; bottom: 20px; font-size: 8px; }
+    .hero-actions { gap: 22px; }
+    .hero-actions .btn-primary { padding: 14px 18px; font-size: 10px; }
+    .hero-photo { object-position: 60% center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    .product-card:hover .product-photo img, .collection-card:hover img { transform: none !important; }
+  }
+}
+
+@layer components {
+  .category-dropdown { position: relative; }
+  .category-dropdown summary { cursor: pointer; }
+  .category-dropdown-panel { position: absolute; z-index: 60; top: 100%; left: 0; width: min(380px, 85vw); max-height: 65vh; overflow-y: auto; padding: 18px 22px; background: #faf7f2; color: #242320; border: 1px solid #e9e3d9; box-shadow: 0 12px 28px #24232018; text-transform: none; letter-spacing: normal; }
+  .dark .category-dropdown-panel { background: #242422; color: #f6f1e9; }
+}

@@ -17,7 +17,17 @@
     </div>
   </div>
 
-  <div class="flex gap-8">
+  {% if subcategories %}
+  <section aria-label="Subcategories" class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+    {% for child in subcategories %}
+    <a href="{% url 'store:category_detail' child.slug %}" class="block border border-sand">
+      {% if child.banner_url %}<img src="{{ child.banner_url }}" alt="{{ child.name }}" loading="lazy" decoding="async" width="1672" height="941" class="w-full object-cover" style="aspect-ratio:16/9;">{% endif %}
+      <span class="block p-3">{{ child.name }}</span>
+    </a>
+    {% endfor %}
+  </section>
+  {% endif %}
+  <div class="flex flex-col sm:flex-row gap-8">
     <!-- Sidebar filters -->
     <aside class="hidden sm:block w-44 flex-shrink-0">
       <p class="text-xs tracking-widest uppercase mb-4">Categories</p>
@@ -28,19 +38,17 @@
             All
           </a>
         </li>
-        {% for cat in categories %}
-        <li>
-          <a href="{% url 'store:product_list' %}?category={{ cat.slug }}"
-             class="{% if current_category == cat.slug %}text-taupe font-medium{% else %}text-espresso/60 hover:text-espresso{% endif %} transition-colors">
-            {{ cat.name }}
-          </a>
-        </li>
-        {% endfor %}
+        {% include "includes/category_links.html" with category_nodes=categories %}
       </ul>
     </aside>
 
+    <details class="sm:hidden mb-4">
+      <summary>Categories</summary>
+      <ul>{% include "includes/category_links.html" with category_nodes=categories %}</ul>
+    </details>
     <!-- Product grid -->
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
+      <p class="text-sm mb-4">{{ page_obj.paginator.count }} product{{ page_obj.paginator.count|pluralize }}</p>
       {% if products %}
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {% for product in products %}
@@ -52,6 +60,13 @@
           <p class="font-serif text-2xl mb-2">No products found</p>
           <p class="text-sm">Try a different category or check back soon.</p>
         </div>
+      {% endif %}
+      {% if page_obj.has_other_pages %}
+      <nav aria-label="Product pages" class="flex gap-4 mt-8">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}&amp;category={{ current_category|default:''|urlencode }}&amp;sort={{ current_sort }}">Previous</a>{% endif %}
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}&amp;category={{ current_category|default:''|urlencode }}&amp;sort={{ current_sort }}">Next</a>{% endif %}
+      </nav>
       {% endif %}
     </div>
   </div>

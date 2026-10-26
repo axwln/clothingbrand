@@ -1,69 +1,89 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}{{ store.brand_name }}{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Jost:wght@300;400;500;600&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20261026-logo-layout-3">
   {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-ivory text-espresso font-sans min-h-screen flex flex-col">
+<body class="bg-ivory dark:bg-dark-bg text-espresso dark:text-dark-fg font-sans min-h-screen flex flex-col transition-colors duration-300">
 
-  <!-- Navigation -->
-  <header class="border-b border-sand sticky top-0 bg-ivory z-50">
+  <!-- ── TOP BAR ── -->
+  <div class="bg-maroon text-ivory text-center text-[.68rem] tracking-[.2em] uppercase py-2 px-4">
+    Free shipping on orders above ₹2000 &nbsp;·&nbsp; Easy 7-day returns
+  </div>
+
+  <!-- ── NAVIGATION ── -->
+  <header id="site-nav" class="glass-nav sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="flex items-center justify-between h-16">
 
-        <!-- Mobile menu button -->
-        <button id="menu-toggle" class="sm:hidden p-2" aria-label="Menu">
+      <!-- Transparent home-link logo, utility controls on the right -->
+      <div class="header-main">
+
+        <!-- Hamburger (mobile) -->
+        <button id="menu-toggle" class="sm:hidden p-2 -ml-2 text-espresso dark:text-dark-fg" aria-label="Menu" aria-controls="mobile-menu" aria-expanded="true" hidden>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
 
-        <!-- Logo -->
-        <a href="{% url 'store:home' %}" class="font-serif text-2xl tracking-wide">
-          {% if store.logo %}
-            <img src="{{ store.logo.url }}" alt="{{ store.brand_name }}" class="h-8">
-          {% else %}
-            {{ store.brand_name }}
-          {% endif %}
-        </a>
+        <div class="header-brand">
+          {% include "includes/brand_logo.html" %}
+        </div>
 
-        <!-- Desktop nav -->
-        <nav class="hidden sm:flex items-center gap-8 text-xs tracking-widest uppercase">
-          <a href="{% url 'store:product_list' %}" class="hover:text-taupe transition-colors">Shop</a>
-          <a href="{% url 'store:product_list' %}?category=" class="hover:text-taupe transition-colors">Collections</a>
-          <a href="{% url 'store:about' %}" class="hover:text-taupe transition-colors">About</a>
-          <a href="{% url 'store:contact' %}" class="hover:text-taupe transition-colors">Contact</a>
-        </nav>
-
-        <!-- Cart & Search -->
-        <div class="flex items-center gap-4">
-          <a href="{% url 'store:search' %}" class="p-2 hover:text-taupe transition-colors" aria-label="Search">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+        <!-- Right icons -->
+        <div class="flex items-center gap-1 ml-auto sm:ml-0">
+          <button id="theme-toggle" aria-label="Toggle dark mode"
+                  class="p-2 text-espresso/50 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors">
+            <svg id="icon-sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 100 10A5 5 0 0012 7z"/>
+            </svg>
+            <svg id="icon-moon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>
+            </svg>
+          </button>
+          <a href="{% url 'store:search' %}" class="p-2 text-espresso/50 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors" aria-label="Search">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35M17 11A6 6 0 115 11a6 6 0 0112 0z"/>
             </svg>
           </a>
-          <a href="{% url 'store:cart_detail' %}" class="relative p-2 hover:text-taupe transition-colors" aria-label="Cart">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4zM3 6h18M16 10a4 4 0 01-8 0"/>
+          <a href="{% url 'store:cart_detail' %}" class="relative p-2 text-espresso/50 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors" aria-label="Cart">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
             </svg>
             {% if cart_count %}
-              <span class="absolute -top-0.5 -right-0.5 bg-taupe text-ivory text-xs w-4 h-4 rounded-full flex items-center justify-center leading-none">{{ cart_count }}</span>
+              <span class="absolute top-1 right-1 bg-maroon text-ivory text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center leading-none">{{ cart_count }}</span>
             {% endif %}
           </a>
         </div>
       </div>
+
+      <!-- Row 2: category nav links (desktop only) -->
+      <nav class="desktop-links hidden sm:flex flex-wrap items-center justify-center gap-8 pb-3 text-[.72rem] tracking-[.14em] uppercase border-t border-sand/60 dark:border-dark-line pt-2">
+        <a href="{% url 'store:home' %}" class="text-espresso/60 dark:text-dark-muted hover:text-maroon transition-colors">Home</a>
+        <a href="{% url 'store:product_list' %}" class="text-espresso/60 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors">All</a>
+        <details class="category-dropdown">
+          <summary>Collections</summary>
+          <ul class="category-dropdown-panel">{% include "includes/category_links.html" with category_nodes=nav_categories %}</ul>
+        </details>
+        <a href="{% url 'store:about' %}" class="text-espresso/60 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors">About</a>
+        <a href="{% url 'store:contact' %}" class="text-espresso/60 dark:text-dark-muted hover:text-maroon dark:hover:text-maroon transition-colors">Contact</a>
+      </nav>
     </div>
 
-    <!-- Mobile nav -->
-    <nav id="mobile-menu" class="hidden sm:hidden border-t border-sand bg-ivory px-4 py-4 space-y-3 text-xs tracking-widest uppercase">
-      <a href="{% url 'store:product_list' %}" class="block hover:text-taupe">Shop</a>
-      <a href="{% url 'store:about' %}" class="block hover:text-taupe">About</a>
-      <a href="{% url 'store:contact' %}" class="block hover:text-taupe">Contact</a>
+    <!-- Mobile drawer -->
+    <nav id="mobile-menu" class="sm:hidden border-t border-sand dark:border-dark-line bg-ivory dark:bg-dark-bg px-5 py-5 space-y-4 text-sm">
+      <a href="{% url 'store:home' %}" class="block font-medium hover:text-maroon transition-colors">Home</a>
+      <a href="{% url 'store:product_list' %}" class="block font-medium hover:text-maroon transition-colors">All Products</a>
+      <ul>{% include "includes/category_links.html" with category_nodes=nav_categories %}</ul>
+      <div class="border-t border-sand dark:border-dark-line pt-4 space-y-3">
+        <a href="{% url 'store:about' %}" class="block text-espresso/70 dark:text-dark-muted hover:text-maroon transition-colors">About</a>
+        <a href="{% url 'store:contact' %}" class="block text-espresso/70 dark:text-dark-muted hover:text-maroon transition-colors">Contact</a>
+      </div>
     </nav>
   </header>
 
@@ -71,7 +91,7 @@
   {% if messages %}
     <div class="max-w-7xl mx-auto px-4 pt-4 w-full">
       {% for message in messages %}
-        <div class="mb-2 px-4 py-3 text-sm border {% if message.tags == 'error' %}border-red-300 bg-red-50 text-red-700{% else %}border-sand bg-sand/30 text-espresso{% endif %}">
+        <div class="mb-2 px-4 py-3 text-sm border rounded-lg {% if message.tags == 'error' %}border-red-300 bg-red-50 text-red-700{% else %}border-sand dark:border-dark-line bg-sand/30 dark:bg-dark-surface text-espresso dark:text-dark-fg{% endif %}">
           {{ message }}
         </div>
       {% endfor %}
@@ -82,53 +102,82 @@
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-sand mt-16 bg-espresso text-ivory/80">
+  <!-- ── FOOTER ── -->
+  <footer class="bg-espresso dark:bg-dark-surface text-ivory/70 mt-20">
+    <!-- Trust bar -->
+    <div class="border-b border-ivory/10 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-xs">
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></svg>
+          <span class="text-ivory/80 tracking-wide">Free Shipping<br><span class="text-ivory/40">Orders above ₹2000</span></span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          <span class="text-ivory/80 tracking-wide">Easy Returns<br><span class="text-ivory/40">Within 7 days</span></span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <span class="text-ivory/80 tracking-wide">100% Authentic<br><span class="text-ivory/40">Genuine ethnic wear</span></span>
+        </div>
+        <div class="flex flex-col items-center gap-2">
+          <svg class="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          <span class="text-ivory/80 tracking-wide">WhatsApp Support<br><span class="text-ivory/40">Quick order help</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Links -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-2 sm:grid-cols-4 gap-8 text-xs tracking-wide">
       <div class="col-span-2 sm:col-span-1">
-        <p class="font-serif text-xl text-ivory mb-3">{{ store.brand_name }}</p>
-        <p class="leading-relaxed">{{ store.tagline }}</p>
+        {% include "includes/brand_logo.html" %}
+        {% if store.tagline %}<p class="text-[.58rem] tracking-[.28em] uppercase text-gold mb-3">{{ store.tagline }}</p>{% endif %}
+        <p class="leading-relaxed text-ivory/50 text-[.8rem]">{{ store.about_text|truncatewords:20 }}</p>
+        {% if store.instagram_url %}
+          <a href="{{ store.instagram_url }}" target="_blank" rel="noopener"
+             class="inline-flex items-center gap-1.5 mt-4 text-gold hover:text-ivory transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            @devikaethnicwears
+          </a>
+        {% endif %}
       </div>
       <div>
-        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Shop</p>
-        <ul class="space-y-2">
-          <li><a href="{% url 'store:product_list' %}" class="hover:text-ivory transition-colors">All Products</a></li>
-          <li><a href="{% url 'store:about' %}" class="hover:text-ivory transition-colors">About Us</a></li>
-          <li><a href="{% url 'store:contact' %}" class="hover:text-ivory transition-colors">Contact</a></li>
+        <p class="reveal-up text-ivory uppercase tracking-widest text-[.65rem] mb-4">Collections</p>
+        <ul class="space-y-2.5 text-[.8rem]">
+          {% for cat in nav_categories %}
+            <li><a href="{% url 'store:category_detail' cat.slug %}" class="hover:text-ivory transition-colors">{{ cat.name }}</a></li>
+          {% endfor %}
         </ul>
       </div>
       <div>
-        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Help</p>
-        <ul class="space-y-2">
-          <li><a href="{% url 'store:shipping' %}" class="hover:text-ivory transition-colors">Shipping</a></li>
-          <li><a href="{% url 'store:returns' %}" class="hover:text-ivory transition-colors">Returns</a></li>
+        <p class="reveal-up text-ivory uppercase tracking-widest text-[.65rem] mb-4">Help</p>
+        <ul class="space-y-2.5 text-[.8rem]">
           <li><a href="{% url 'orders:order_lookup' %}" class="hover:text-ivory transition-colors">Track Order</a></li>
+          <li><a href="{% url 'store:shipping' %}" class="hover:text-ivory transition-colors">Shipping Info</a></li>
+          <li><a href="{% url 'store:returns' %}" class="hover:text-ivory transition-colors">Returns</a></li>
+          <li><a href="{% url 'store:contact' %}" class="hover:text-ivory transition-colors">Contact Us</a></li>
         </ul>
       </div>
       <div>
-        <p class="text-ivory uppercase tracking-widest text-xs mb-3">Legal</p>
-        <ul class="space-y-2">
+        <p class="reveal-up text-ivory uppercase tracking-widest text-[.65rem] mb-4">Info</p>
+        <ul class="space-y-2.5 text-[.8rem]">
+          <li><a href="{% url 'store:about' %}" class="hover:text-ivory transition-colors">About Us</a></li>
           <li><a href="{% url 'store:privacy' %}" class="hover:text-ivory transition-colors">Privacy Policy</a></li>
           <li><a href="{% url 'store:terms' %}" class="hover:text-ivory transition-colors">Terms</a></li>
         </ul>
         {% if store.contact_phone %}
-          <p class="mt-4">{{ store.contact_phone }}</p>
+          <p class="mt-5 text-ivory/40 text-[.78rem]">{{ store.contact_phone }}</p>
         {% endif %}
         {% if store.contact_email %}
-          <p>{{ store.contact_email }}</p>
+          <p class="text-ivory/40 text-[.78rem]">{{ store.contact_email }}</p>
         {% endif %}
       </div>
     </div>
-    <div class="border-t border-ivory/10 text-center py-4 text-xs text-ivory/40">
+    <div class="border-t border-ivory/10 text-center py-4 text-[.7rem] text-ivory/25">
       &copy; {% now "Y" %} {{ store.brand_name }}. All rights reserved.
     </div>
   </footer>
 
-  <script>
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-  </script>
+  <script src="{% static 'js/storefront.js' %}?v=20261026-logo-layout-3" defer></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>

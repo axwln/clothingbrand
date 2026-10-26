@@ -338,7 +338,7 @@ def order_lookup(request):
         number = request.POST.get("order_number", "").strip().upper()
         phone = request.POST.get("customer_phone", "").strip()
         try:
-            order = Order.objects.prefetch_related("items").get(
+            order = Order.objects.prefetch_related("items", "history").get(
                 order_number=number, customer_phone=phone
             )
         except Order.DoesNotExist:

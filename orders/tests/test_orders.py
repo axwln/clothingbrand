@@ -1,6 +1,6 @@
 from decimal import Decimal
 from unittest.mock import patch, MagicMock
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from datetime import timedelta
@@ -29,7 +29,7 @@ def make_order(**kwargs):
 class OrderModelTest(TestCase):
     def test_order_number_generated(self):
         order = make_order()
-        self.assertTrue(order.order_number.startswith("MSN"))
+        self.assertTrue(order.order_number.startswith("DVK"))
         self.assertEqual(len(order.order_number), 11)
 
     def test_order_number_unique(self):
@@ -61,6 +61,7 @@ class CheckoutViewTest(TestCase):
         response = self.client.get("/orders/checkout/")
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(RAZORPAY_KEY_ID="", RAZORPAY_KEY_SECRET="")
     def test_payment_create_requires_razorpay_credentials(self):
         session = self.client.session
         session["cart"] = {str(self.variant.pk): {"quantity": 1}}
@@ -75,7 +76,7 @@ class CheckoutViewTest(TestCase):
             "pincode": "400001",
         })
         data = response.json()
-        # Should fail because test credentials are placeholders
+        # Missing credentials are isolated from developer environment settings
         self.assertIn("error", data)
 
     def test_order_lookup_with_wrong_details(self):

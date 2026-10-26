@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,10 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=20261026-logo-layout-3">
 </head>
 <body class="bg-espresso min-h-screen flex items-center justify-center px-4">
   <div class="w-full max-w-sm">
+    <div class="text-center mb-8">
+      {% include "includes/brand_logo.html" %}
+      <a href="{% url 'store:home' %}" class="block text-sm text-ivory mt-3">Home</a>
+    </div>
     <h1 class="font-serif text-3xl text-ivory text-center mb-8">Dashboard</h1>
     {% if error %}
       <div class="mb-4 px-4 py-3 border border-red-400/50 bg-red-900/20 text-red-300 text-sm">{{ error }}</div>

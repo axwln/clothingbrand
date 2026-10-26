@@ -9,7 +9,9 @@ class Order(models.Model):
         ("pending", "Pending Payment"),
         ("paid", "Paid"),
         ("processing", "Processing"),
+        ("packed", "Packed"),
         ("shipped", "Shipped"),
+        ("out_for_delivery", "Out for Delivery"),
         ("delivered", "Delivered"),
         ("cancelled", "Cancelled"),
         ("refunded", "Refunded"),
@@ -30,6 +32,11 @@ class Order(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     notes = models.TextField(blank=True)
+    # Tracking
+    courier_name = models.CharField(max_length=100, blank=True)
+    tracking_number = models.CharField(max_length=100, blank=True)
+    tracking_url = models.URLField(blank=True)
+    estimated_delivery = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -52,7 +59,7 @@ class Order(models.Model):
     @staticmethod
     def _generate_order_number():
         import random, string
-        prefix = "MSN"
+        prefix = "DVK"
         suffix = "".join(random.choices(string.digits, k=8))
         return f"{prefix}{suffix}"
 
@@ -104,3 +111,17 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.order.order_number} – {self.status}"
+
+
+class OrderStatusHistory(models.Model):
+    """Immutable log of every status change for customer-facing tracking timeline."""
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="history")
+    status = models.CharField(max_length=20, choices=Order.STATUS_CHOICES)
+    note = models.CharField(max_length=300, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.order.order_number} → {self.status}"

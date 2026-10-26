@@ -1,8 +1,10 @@
 {% extends "dashboard/base_dashboard.html" %}
+{% load static %}
 {% block title %}Categories{% endblock %}
 {% block page_title %}Categories{% endblock %}
 {% block content %}
-<div class="flex justify-end mb-4">
+<div class="flex flex-wrap justify-end gap-3 mb-4">
+  <a href="{% static 'images/category-concepts-v1/index.html' %}" class="btn-secondary">Review 29 category images</a>
   <a href="{% url 'core:category_create' %}" class="btn-primary">+ New Category</a>
 </div>
 <div class="bg-white border border-sand">
@@ -10,6 +12,9 @@
     <thead class="border-b border-sand text-xs tracking-widest uppercase text-espresso/50">
       <tr>
         <th class="text-left px-4 py-3">Name</th>
+        <th class="text-left px-4 py-3">Parent</th>
+        <th class="text-left px-4 py-3">Products</th>
+        <th class="text-left px-4 py-3">Navigation</th>
         <th class="text-left px-4 py-3">Slug</th>
         <th class="text-left px-4 py-3">Active</th>
         <th class="px-4 py-3"></th>
@@ -19,6 +24,9 @@
       {% for cat in categories %}
       <tr class="hover:bg-ivory/50">
         <td class="px-4 py-3 font-medium">{{ cat.name }}</td>
+        <td class="px-4 py-3">{{ cat.parent.name|default:"—" }}</td>
+        <td class="px-4 py-3">{{ cat.product_count }}</td>
+        <td class="px-4 py-3">{{ cat.show_in_navigation|yesno:"Shown,Hidden" }}</td>
         <td class="px-4 py-3 font-mono text-xs text-espresso/50">{{ cat.slug }}</td>
         <td class="px-4 py-3">{% if cat.is_active %}✓{% else %}—{% endif %}</td>
         <td class="px-4 py-3 text-right">
@@ -26,7 +34,7 @@
         </td>
       </tr>
       {% empty %}
-      <tr><td colspan="4" class="px-4 py-8 text-center text-espresso/40">No categories yet.</td></tr>
+      <tr><td colspan="7" class="px-4 py-8 text-center text-espresso/40">No categories yet.</td></tr>
       {% endfor %}
     </tbody>
   </table>

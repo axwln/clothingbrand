@@ -34,6 +34,7 @@ urlpatterns = [
     path("orders/", views.order_list, name="order_list"),
     path("orders/<int:pk>/", views.order_detail, name="order_detail"),
     path("orders/<int:pk>/status/", views.order_status_update, name="order_status_update"),
+    path("orders/<int:pk>/tracking/", views.order_tracking_update, name="order_tracking_update"),
     # Banners
     path("banners/", views.banner_list, name="banner_list"),
     path("banners/create/", views.banner_create, name="banner_create"),

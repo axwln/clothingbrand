@@ -1,0 +1,10 @@
+{% for cat in category_nodes %}
+<li>
+  <a href="{% url 'store:category_detail' cat.slug %}" class="block py-2 hover:text-maroon">{{ cat.name }} <span class="text-xs">({{ cat.product_count }})</span></a>
+  {% if cat.nav_children %}
+    <ul class="pl-4 border-l border-sand">
+      {% include "includes/category_links.html" with category_nodes=cat.nav_children %}
+    </ul>
+  {% endif %}
+</li>
+{% endfor %}

@@ -1,34 +1,69 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ store.brand_name }} — Luxury Women's Fashion{% endblock %}
+{% block title %}{{ store.brand_name }} — Ethnic Luxury for the Modern Woman{% endblock %}
 
 {% block content %}
 
-<!-- Hero Banner -->
-<section class="relative overflow-hidden bg-sand" style="min-height: 85vh;">
-  <img src="{% static 'images/banners/hero.jpg' %}" alt="New Collection"
-       class="absolute inset-0 w-full h-full object-cover object-center opacity-80">
-  <div class="relative z-10 flex flex-col items-center justify-center text-center h-full min-h-[85vh] px-4">
-    <p class="text-xs tracking-[0.3em] uppercase text-espresso/70 mb-4">New Collection</p>
-    <h1 class="font-serif text-5xl sm:text-7xl text-espresso mb-6 leading-tight">Effortless Elegance</h1>
-    <p class="text-espresso/70 text-lg mb-8 max-w-md">Discover our curated collection of luxury women's fashion.</p>
-    <a href="{% url 'store:product_list' %}" class="btn-primary">Explore Collection</a>
+{% url 'store:product_list' as shop_url %}
+{% with hero=banners.first %}
+<section class="fashion-hero" data-home-hero aria-labelledby="hero-heading">
+  {% if hero.image %}
+    <img src="{{ hero.image.url }}" alt="{{ hero.title }}" class="hero-photo" fetchpriority="high" decoding="async" width="1600" height="1067">
+  {% else %}
+    <img src="{% static 'images/banners/hero.jpg' %}" alt="DEVIKA CLOTHINGS collection" class="hero-photo" fetchpriority="high" decoding="async" width="1600" height="1067">
+  {% endif %}
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-copy">
+    <p class="hero-eyebrow reveal-up" data-hero-reveal><span class="hero-brand-name" aria-label="DEVIKA CLOTHINGS"><span aria-hidden="true">DEVIKA</span><span aria-hidden="true">CLOTHINGS</span></span> <span aria-hidden="true"> / </span> The collection</p>
+    <h1 id="hero-heading" class="reveal-lines" data-hero-reveal>
+      {% if hero.title %}<span>{{ hero.title }}</span>{% else %}<span>Wear the art</span><span class="hero-italic">of India.</span>{% endif %}
+    </h1>
+    <p class="hero-description reveal-up" data-hero-reveal>{{ hero.subtitle|default:store.tagline|default:"Tradition, thoughtfully reimagined. Discover pieces to make your own." }}</p>
+    <div class="hero-actions reveal-up" data-hero-reveal>
+      <a href="{{ hero.link_url|default:shop_url }}" class="btn-primary">{{ hero.link_text|default:"Explore the collection" }} <span aria-hidden="true">↗</span></a>
+      <a href="#collections" class="editorial-link">Discover more <span aria-hidden="true">↓</span></a>
+    </div>
   </div>
+  <p class="hero-caption" aria-hidden="true">Indian roots. A modern expression.</p>
 </section>
+{% endwith %}
 
-<!-- Categories -->
+<!-- ══════════════════════════════════════════════
+     SHOP BY CATEGORY
+     bibinjohn: tall portrait cards, clean row
+══════════════════════════════════════════════ -->
 {% if categories %}
-<section class="max-w-7xl mx-auto px-4 sm:px-6 py-16">
-  <h2 class="font-serif text-3xl text-center mb-10">Shop by Category</h2>
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+<section id="collections" class="collection-section max-w-7xl mx-auto px-4 sm:px-6 py-16">
+
+  <div class="reveal-up text-center mb-10">
+    <p class="text-[.68rem] tracking-[.26em] uppercase text-gold-ink dark:text-gold mb-2">Explore</p>
+    <h2 class="font-serif text-3xl sm:text-4xl dark:text-dark-fg">Shop by Category</h2>
+  </div>
+
+  <!-- Desktop: equal-width row. Mobile: 2-col grid -->
+  <div class="reveal-stagger grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
     {% for category in categories %}
-    <a href="{% url 'store:category_detail' category.slug %}" class="group relative overflow-hidden aspect-square bg-sand">
-      {% if category.slug == 'dresses' %}<img src="{% static 'images/categories/dresses.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-      {% elif category.slug == 'tops' %}<img src="{% static 'images/categories/tops.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-      {% elif category.slug == 'co-ords' %}<img src="{% static 'images/categories/coords.jpg' %}" alt="{{ category.name }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+    <a href="{% url 'store:category_detail' category.slug %}"
+       class="collection-card reveal-image group relative overflow-hidden rounded-xl bg-sand dark:bg-dark-surface block"
+       style="aspect-ratio: 3/4;">
+
+      {% if category.banner_url %}
+        <img loading="lazy" decoding="async" src="{{ category.banner_url }}" alt="{{ category.name }}" class="absolute inset-0 w-full h-full object-cover" style="object-position:75% center;">
+      {% else %}
+        <div class="absolute inset-0 bg-sand" aria-hidden="true"></div>
       {% endif %}
-      <div class="absolute inset-0 bg-espresso/20 group-hover:bg-espresso/30 transition-colors duration-300 flex items-end p-4">
-        <span class="text-ivory font-serif text-lg">{{ category.name }}</span>
+
+      <!-- Gradient -->
+      <div class="absolute inset-0 bg-gradient-to-t from-espresso/75 via-transparent to-transparent"></div>
+
+      <!-- Label -->
+      <div class="absolute bottom-0 left-0 right-0 p-4">
+        <p class="font-serif italic text-ivory text-base sm:text-lg leading-tight">{{ category.name }}</p>
+        <p class="text-xs text-ivory">{{ category.product_count }} product{{ category.product_count|pluralize }}</p>
+        <p class="text-[.6rem] tracking-[.18em] uppercase text-ivory/50 mt-0.5
+                  opacity-100 transition-all duration-300">
+          Shop →
+        </p>
       </div>
     </a>
     {% endfor %}
@@ -36,14 +71,28 @@
 </section>
 {% endif %}
 
-<!-- Featured Products -->
+
+<!-- ══════════════════════════════════════════════
+     NEW ARRIVALS — tight 4-col grid
+══════════════════════════════════════════════ -->
 {% if featured_products %}
-<section class="max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-20">
-  <div class="flex items-baseline justify-between mb-10">
-    <h2 class="font-serif text-3xl">Featured Pieces</h2>
-    <a href="{% url 'store:product_list' %}" class="text-xs tracking-widest uppercase text-taupe hover:text-espresso transition-colors">View All →</a>
+<section class="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+
+  <div class="reveal-up flex items-end justify-between gap-4 mb-8">
+    <div>
+      <p class="text-[.68rem] tracking-[.26em] uppercase text-gold-ink dark:text-gold mb-1">Just In</p>
+      <h2 class="font-serif text-3xl sm:text-4xl dark:text-dark-fg">New Arrivals</h2>
+    </div>
+    <a href="{% url 'store:product_list' %}"
+       class="text-[.72rem] tracking-[.16em] uppercase text-maroon hover:opacity-70 transition-opacity flex items-center gap-1.5">
+      View All
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
   </div>
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+
+  <div class="reveal-stagger grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
     {% for product in featured_products %}
       {% include "store/_product_card.html" %}
     {% endfor %}
@@ -51,13 +100,57 @@
 </section>
 {% endif %}
 
-<!-- Brand strip -->
-<section class="bg-espresso text-ivory text-center py-16 px-4">
-  <p class="text-xs tracking-[0.3em] uppercase text-ivory/50 mb-3">Our Promise</p>
-  <h2 class="font-serif text-3xl sm:text-4xl mb-4">Crafted with Intention</h2>
-  <p class="text-ivory/60 max-w-xl mx-auto text-sm leading-relaxed">
-    Every piece in our collection is thoughtfully designed for the modern woman — timeless, refined, and made to last.
-  </p>
+
+<!-- ══════════════════════════════════════════════
+     BRAND STORY — split layout (bibinjohn style)
+══════════════════════════════════════════════ -->
+<section class="bg-sand dark:bg-dark-surface py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 grid sm:grid-cols-2 gap-12 items-center">
+
+    <!-- Text side -->
+    <div class="reveal-up order-2 sm:order-1">
+      <p class="text-[.68rem] tracking-[.26em] uppercase text-gold-ink dark:text-gold mb-3">Our Story</p>
+      <h2 id="story-heading" class="reveal-lines font-serif text-3xl sm:text-4xl dark:text-dark-fg mb-5 leading-snug"><span>Rooted in tradition.</span><span><em>Styled for today.</em></span></h2>
+      <p class="text-espresso/60 dark:text-dark-muted text-sm leading-relaxed mb-6 max-w-md">
+        {% if store.about_text %}{{ store.about_text|truncatewords:60 }}{% else %}At DEVIKA CLOTHINGS, discover Indian fashion for everyday expression and moments of celebration.{% endif %}
+      </p>
+      <a href="{% url 'store:about' %}"
+         class="inline-flex items-center gap-2 text-[.75rem] tracking-[.16em] uppercase text-maroon hover:opacity-70 transition-opacity">
+        Read More
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Image side -->
+    <div class="reveal-image order-1 sm:order-2 overflow-hidden rounded-2xl aspect-[4/5]">
+      <img loading="lazy" decoding="async" src="{% static 'images/banners/hero.jpg' %}"
+           alt="DEVIKA CLOTHINGS collection"
+           class="w-full h-full object-cover object-top">
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     FESTIVE BANNER — full-width CTA strip
+══════════════════════════════════════════════ -->
+<section class="relative overflow-hidden py-20 px-4 text-center isolate"
+         style="background: #242320;">
+
+  <div class="reveal-up relative z-10 max-w-xl mx-auto">
+    <p class="text-[.68rem] tracking-[.28em] uppercase text-gold mb-3">Festive Season</p>
+    <h2 class="font-serif italic text-3xl sm:text-5xl text-ivory mb-4 leading-tight">
+      Dress for Every<br>Celebration
+    </h2>
+    <p class="text-ivory/50 text-sm mb-8">
+      Lehengas, sarees, and festive sets — curated for weddings, Diwali, Navratri &amp; more.
+    </p>
+    <a href="{% url 'store:product_list' %}" class="btn-primary">
+      Explore the collection
+    </a>
+  </div>
 </section>
 
 {% endblock %}

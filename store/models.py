@@ -5,6 +5,9 @@ from decimal import Decimal
 
 
 class Category(models.Model):
+    parent = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="children"
+    )
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
@@ -19,9 +22,57 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    static_image = models.CharField(max_length=255, blank=True, help_text="Optional static category banner path. Uploaded image takes priority.")
+    show_in_navigation = models.BooleanField(default=True, help_text="Hide from navigation without deleting the category or changing products.")
+
+    @property
+    def banner_url(self):
+        if self.image:
+            return self.image.url
+        if self.static_image:
+            from django.templatetags.static import static
+            return static(self.static_image)
+        return ""
+
+    def descendant_ids(self):
+        edges = list(Category.objects.filter(is_active=True).values_list("id", "parent_id"))
+        result, pending = {self.pk}, [self.pk]
+        while pending:
+            current = pending.pop()
+            children = [pk for pk, parent in edges if parent == current and pk not in result]
+            result.update(children)
+            pending.extend(children)
+        return result
+
+    def clean(self):
+        from django.core.exceptions import ValidationError
+        seen = {self.pk} if self.pk else set()
+        node = self.parent
+        while node:
+            if node.pk in seen:
+                raise ValidationError({"parent": "Choose a parent outside this category's descendants."})
+            seen.add(node.pk)
+            node = node.parent
+
+    def get_ancestors(self):
+        """Return list of ancestor categories from root to parent."""
+        ancestors = []
+        node = self.parent
+        while node:
+            ancestors.insert(0, node)
+            node = node.parent
+        return ancestors
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+        # Prevent cyclic parent relationships
+        if self.parent_id and self.pk:
+            ancestor = self.parent
+            while ancestor:
+                if ancestor.pk == self.pk:
+                    raise ValueError("Cyclic category relationship detected.")
+                ancestor = ancestor.parent
         super().save(*args, **kwargs)
 
 
@@ -144,3 +195,24 @@ class Coupon(models.Model):
 
     def __str__(self):
         return self.code
+
+
+class CategoryImportLabel(models.Model):
+    """Stable literal source identity; never infer identity from a slug or case."""
+    source_label = models.CharField(max_length=200, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="source_labels")
+
+
+class CategorySourceRow(models.Model):
+    workbook_name = models.CharField(max_length=255)
+    workbook_sha256 = models.CharField(max_length=64)
+    sheet_name = models.CharField(max_length=100)
+    sheet_row = models.PositiveIntegerField()
+    original_excel_row = models.PositiveIntegerField()
+    original_label = models.CharField(max_length=200)
+    original_description = models.TextField(blank=True)
+    label = models.ForeignKey(CategoryImportLabel, on_delete=models.PROTECT, related_name="source_rows")
+
+    class Meta:
+        unique_together = [("workbook_sha256", "sheet_name", "sheet_row")]
+        ordering = ["original_excel_row"]

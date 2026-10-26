@@ -145,7 +145,7 @@ def product_image_delete(request, pk, img_pk):
 
 @staff_required
 def category_list(request):
-    categories = Category.objects.all()
+    categories = Category.objects.select_related("parent").annotate(product_count=Count("products"))
     return render(request, "dashboard/category_list.html", {"categories": categories})
 
 
@@ -315,10 +315,38 @@ def order_status_update(request, pk):
         order = get_object_or_404(Order, pk=pk)
         new_status = request.POST.get("status")
         valid = [s[0] for s in Order.STATUS_CHOICES]
-        if new_status in valid:
+        if new_status in valid and new_status != order.status:
+            old_status = order.status
             order.status = new_status
             order.save(update_fields=["status", "updated_at"])
+            from orders.models import OrderStatusHistory
+            OrderStatusHistory.objects.create(
+                order=order,
+                status=new_status,
+                note=request.POST.get("note", "").strip(),
+            )
             messages.success(request, f"Order status updated to {new_status}.")
+    return redirect("core:order_detail", pk=pk)
+
+
+@staff_required
+def order_tracking_update(request, pk):
+    if request.method == "POST":
+        order = get_object_or_404(Order, pk=pk)
+        order.courier_name = request.POST.get("courier_name", "").strip()
+        order.tracking_number = request.POST.get("tracking_number", "").strip()
+        order.tracking_url = request.POST.get("tracking_url", "").strip()
+        est = request.POST.get("estimated_delivery", "").strip()
+        if est:
+            from datetime import date
+            try:
+                order.estimated_delivery = date.fromisoformat(est)
+            except ValueError:
+                pass
+        else:
+            order.estimated_delivery = None
+        order.save(update_fields=["courier_name", "tracking_number", "tracking_url", "estimated_delivery", "updated_at"])
+        messages.success(request, "Tracking details updated.")
     return redirect("core:order_detail", pk=pk)
 
 

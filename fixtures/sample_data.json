@@ -3,13 +3,13 @@
     "model": "core.storesettings",
     "pk": 1,
     "fields": {
-      "brand_name": "Maison",
+      "brand_name": "Devika Ethnic Wears",
       "logo": "",
-      "tagline": "Effortless Elegance",
-      "about_text": "Maison is a curated luxury women's fashion brand. Every piece is thoughtfully designed for the modern woman — timeless, refined, and made to last.",
-      "contact_email": "hello@maison.in",
+      "tagline": "Ethnic Luxury for the Modern Woman",
+      "about_text": "Devika Ethnic Wears is a curated collection of traditional and contemporary Indian ethnic fashion. From handwoven sarees to festive lehengas, every piece celebrates the beauty of Indian craftsmanship.",
+      "contact_email": "hello@devikaethnicwears.in",
       "contact_phone": "+91 98765 43210",
-      "address": "Mumbai, Maharashtra, India",
+      "address": "Chennai, Tamil Nadu, India",
       "whatsapp_number": "919876543210",
       "instagram_url": "",
       "privacy_policy": "Your privacy is important to us. We collect only the information necessary to process your order.",
@@ -18,13 +18,14 @@
       "terms": "By placing an order you agree to our terms and conditions."
     }
   },
+
   {
     "model": "store.category",
     "pk": 1,
     "fields": {
-      "name": "Dresses",
-      "slug": "dresses",
-      "description": "Elegant dresses for every occasion",
+      "name": "Sarees",
+      "slug": "sarees",
+      "description": "Traditional handwoven and printed sarees for every occasion",
       "image": "",
       "is_active": true,
       "order": 1
@@ -34,9 +35,9 @@
     "model": "store.category",
     "pk": 2,
     "fields": {
-      "name": "Tops",
-      "slug": "tops",
-      "description": "Refined tops and blouses",
+      "name": "Salwar Sets & Suits",
+      "slug": "salwar-sets-suits",
+      "description": "Elegant salwar kameez sets and designer suits",
       "image": "",
       "is_active": true,
       "order": 2
@@ -46,24 +47,49 @@
     "model": "store.category",
     "pk": 3,
     "fields": {
-      "name": "Co-ords",
-      "slug": "co-ords",
-      "description": "Curated co-ordinate sets",
+      "name": "Kurtis & Tops",
+      "slug": "kurtis-tops",
+      "description": "Casual and festive kurtis and ethnic tops",
       "image": "",
       "is_active": true,
       "order": 3
     }
   },
   {
+    "model": "store.category",
+    "pk": 4,
+    "fields": {
+      "name": "Lehengas & Festive Wear",
+      "slug": "lehengas-festive-wear",
+      "description": "Bridal lehengas and festive occasion wear",
+      "image": "",
+      "is_active": true,
+      "order": 4
+    }
+  },
+  {
+    "model": "store.category",
+    "pk": 5,
+    "fields": {
+      "name": "Accessories & More",
+      "slug": "accessories-more",
+      "description": "Dupattas, jewellery, potli bags and ethnic accessories",
+      "image": "",
+      "is_active": true,
+      "order": 5
+    }
+  },
+
+  {
     "model": "store.product",
     "pk": 1,
     "fields": {
       "category": 1,
-      "name": "Ivory Linen Midi Dress",
-      "slug": "ivory-linen-midi-dress",
-      "description": "A relaxed yet refined midi dress in breathable linen. Perfect for warm days and evening gatherings.",
-      "care_instructions": "Hand wash cold. Lay flat to dry. Do not bleach.",
-      "base_price": "4500.00",
+      "name": "Kanjivaram Silk Saree",
+      "slug": "kanjivaram-silk-saree",
+      "description": "A timeless Kanjivaram silk saree with rich zari border and traditional motifs. Perfect for weddings and grand celebrations.",
+      "care_instructions": "Dry clean only. Store in a muslin cloth.",
+      "base_price": "8500.00",
       "sale_price": null,
       "is_active": true,
       "is_featured": true,
@@ -76,12 +102,12 @@
     "pk": 2,
     "fields": {
       "category": 1,
-      "name": "Espresso Wrap Dress",
-      "slug": "espresso-wrap-dress",
-      "description": "A classic wrap silhouette in a rich espresso tone. Flattering on all body types.",
-      "care_instructions": "Dry clean recommended.",
-      "base_price": "5200.00",
-      "sale_price": "4200.00",
+      "name": "Chanderi Cotton Saree",
+      "slug": "chanderi-cotton-saree",
+      "description": "Lightweight Chanderi cotton saree with delicate block print. Ideal for daily wear and casual occasions.",
+      "care_instructions": "Hand wash cold. Do not wring.",
+      "base_price": "2800.00",
+      "sale_price": "2200.00",
       "is_active": true,
       "is_featured": true,
       "created_at": "2024-01-02T00:00:00Z",
@@ -92,108 +118,371 @@
     "model": "store.product",
     "pk": 3,
     "fields": {
-      "category": 2,
-      "name": "Sand Silk Blouse",
-      "slug": "sand-silk-blouse",
-      "description": "Lightweight silk blouse in a warm sand tone. Pairs beautifully with tailored trousers.",
-      "care_instructions": "Hand wash cold in gentle detergent.",
-      "base_price": "2800.00",
+      "category": 1,
+      "name": "Georgette Printed Saree",
+      "slug": "georgette-printed-saree",
+      "description": "Flowy georgette saree with floral digital print and contrast blouse piece. Great for parties and functions.",
+      "care_instructions": "Dry clean recommended.",
+      "base_price": "3200.00",
       "sale_price": null,
       "is_active": true,
-      "is_featured": true,
+      "is_featured": false,
       "created_at": "2024-01-03T00:00:00Z",
       "updated_at": "2024-01-03T00:00:00Z"
     }
   },
+
+  {
+    "model": "store.product",
+    "pk": 4,
+    "fields": {
+      "category": 2,
+      "name": "Anarkali Salwar Set",
+      "slug": "anarkali-salwar-set",
+      "description": "Floor-length Anarkali suit in soft georgette with embroidered yoke and matching churidar. A classic festive choice.",
+      "care_instructions": "Dry clean only.",
+      "base_price": "4200.00",
+      "sale_price": "3500.00",
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-01-04T00:00:00Z",
+      "updated_at": "2024-01-04T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 5,
+    "fields": {
+      "category": 2,
+      "name": "Cotton Straight Suit Set",
+      "slug": "cotton-straight-suit-set",
+      "description": "Comfortable cotton straight-cut kurta with palazzo and dupatta. Perfect for office and casual outings.",
+      "care_instructions": "Machine wash gentle. Tumble dry low.",
+      "base_price": "1800.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-05T00:00:00Z",
+      "updated_at": "2024-01-05T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 6,
+    "fields": {
+      "category": 2,
+      "name": "Embroidered Patiala Suit",
+      "slug": "embroidered-patiala-suit",
+      "description": "Vibrant Patiala suit with phulkari embroidery on the yoke and matching patiala salwar.",
+      "care_instructions": "Hand wash cold.",
+      "base_price": "2600.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-06T00:00:00Z",
+      "updated_at": "2024-01-06T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "store.product",
+    "pk": 7,
+    "fields": {
+      "category": 3,
+      "name": "Floral Printed Kurti",
+      "slug": "floral-printed-kurti",
+      "description": "Breezy rayon kurti with all-over floral print and side slits. Pairs well with leggings or jeans.",
+      "care_instructions": "Machine wash cold.",
+      "base_price": "899.00",
+      "sale_price": "699.00",
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-01-07T00:00:00Z",
+      "updated_at": "2024-01-07T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 8,
+    "fields": {
+      "category": 3,
+      "name": "Embroidered A-Line Kurti",
+      "slug": "embroidered-a-line-kurti",
+      "description": "A-line cotton kurti with thread embroidery on the neckline and sleeves. Elegant yet comfortable.",
+      "care_instructions": "Hand wash cold. Do not bleach.",
+      "base_price": "1299.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-01-08T00:00:00Z",
+      "updated_at": "2024-01-08T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 9,
+    "fields": {
+      "category": 3,
+      "name": "Bandhani Crop Top",
+      "slug": "bandhani-crop-top",
+      "description": "Trendy bandhani tie-dye crop top in soft cotton. Style with palazzo or skirts for a festive look.",
+      "care_instructions": "Hand wash separately. Colours may bleed.",
+      "base_price": "750.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-09T00:00:00Z",
+      "updated_at": "2024-01-09T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "store.product",
+    "pk": 10,
+    "fields": {
+      "category": 4,
+      "name": "Bridal Lehenga Set",
+      "slug": "bridal-lehenga-set",
+      "description": "Opulent bridal lehenga in deep red with heavy zari and sequin embroidery. Includes blouse and dupatta.",
+      "care_instructions": "Dry clean only. Store in garment bag.",
+      "base_price": "18500.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-01-10T00:00:00Z",
+      "updated_at": "2024-01-10T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 11,
+    "fields": {
+      "category": 4,
+      "name": "Navratri Chaniya Choli",
+      "slug": "navratri-chaniya-choli",
+      "description": "Vibrant mirror-work chaniya choli set for Navratri and Garba. Comes with matching dupatta.",
+      "care_instructions": "Dry clean recommended.",
+      "base_price": "3800.00",
+      "sale_price": "3200.00",
+      "is_active": true,
+      "is_featured": true,
+      "created_at": "2024-01-11T00:00:00Z",
+      "updated_at": "2024-01-11T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 12,
+    "fields": {
+      "category": 4,
+      "name": "Silk Sharara Set",
+      "slug": "silk-sharara-set",
+      "description": "Elegant silk sharara set with embroidered kurta and flared sharara pants. Perfect for receptions and sangeets.",
+      "care_instructions": "Dry clean only.",
+      "base_price": "6500.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-12T00:00:00Z",
+      "updated_at": "2024-01-12T00:00:00Z"
+    }
+  },
+
+  {
+    "model": "store.product",
+    "pk": 13,
+    "fields": {
+      "category": 5,
+      "name": "Banarasi Silk Dupatta",
+      "slug": "banarasi-silk-dupatta",
+      "description": "Luxurious Banarasi silk dupatta with gold zari weave. Elevates any ethnic outfit instantly.",
+      "care_instructions": "Dry clean only.",
+      "base_price": "1200.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-13T00:00:00Z",
+      "updated_at": "2024-01-13T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 14,
+    "fields": {
+      "category": 5,
+      "name": "Embroidered Potli Bag",
+      "slug": "embroidered-potli-bag",
+      "description": "Handcrafted potli bag with zardozi embroidery. The perfect ethnic accessory for weddings and parties.",
+      "care_instructions": "Wipe clean with dry cloth.",
+      "base_price": "650.00",
+      "sale_price": "499.00",
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-14T00:00:00Z",
+      "updated_at": "2024-01-14T00:00:00Z"
+    }
+  },
+  {
+    "model": "store.product",
+    "pk": 15,
+    "fields": {
+      "category": 5,
+      "name": "Oxidised Jhumka Earrings",
+      "slug": "oxidised-jhumka-earrings",
+      "description": "Classic oxidised silver jhumka earrings with intricate filigree work. Pairs with any ethnic outfit.",
+      "care_instructions": "Avoid contact with water and perfume.",
+      "base_price": "450.00",
+      "sale_price": null,
+      "is_active": true,
+      "is_featured": false,
+      "created_at": "2024-01-15T00:00:00Z",
+      "updated_at": "2024-01-15T00:00:00Z"
+    }
+  },
+
   {
     "model": "store.productvariant",
     "pk": 1,
-    "fields": {
-      "product": 1,
-      "sku": "ILD-S-IVR",
-      "size": "S",
-      "color": "Ivory",
-      "color_hex": "#F7F3ED",
-      "stock": 8,
-      "is_active": true
-    }
+    "fields": { "product": 1, "sku": "KSS-FREE-RED", "size": "FREE", "color": "Red & Gold", "color_hex": "#8a1538", "stock": 5, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 2,
-    "fields": {
-      "product": 1,
-      "sku": "ILD-M-IVR",
-      "size": "M",
-      "color": "Ivory",
-      "color_hex": "#F7F3ED",
-      "stock": 12,
-      "is_active": true
-    }
+    "fields": { "product": 2, "sku": "CCS-FREE-BLU", "size": "FREE", "color": "Blue", "color_hex": "#1a3a6b", "stock": 10, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 3,
-    "fields": {
-      "product": 1,
-      "sku": "ILD-L-IVR",
-      "size": "L",
-      "color": "Ivory",
-      "color_hex": "#F7F3ED",
-      "stock": 5,
-      "is_active": true
-    }
+    "fields": { "product": 3, "sku": "GPS-FREE-PNK", "size": "FREE", "color": "Pink", "color_hex": "#e8a0b0", "stock": 8, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 4,
-    "fields": {
-      "product": 2,
-      "sku": "EWD-S-ESP",
-      "size": "S",
-      "color": "Espresso",
-      "color_hex": "#302923",
-      "stock": 6,
-      "is_active": true
-    }
+    "fields": { "product": 4, "sku": "ANK-S-GRN", "size": "S", "color": "Green", "color_hex": "#2d6a4f", "stock": 4, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 5,
-    "fields": {
-      "product": 2,
-      "sku": "EWD-M-ESP",
-      "size": "M",
-      "color": "Espresso",
-      "color_hex": "#302923",
-      "stock": 10,
-      "is_active": true
-    }
+    "fields": { "product": 4, "sku": "ANK-M-GRN", "size": "M", "color": "Green", "color_hex": "#2d6a4f", "stock": 6, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 6,
-    "fields": {
-      "product": 3,
-      "sku": "SSB-S-SND",
-      "size": "S",
-      "color": "Sand",
-      "color_hex": "#E7D8C8",
-      "stock": 3,
-      "is_active": true
-    }
+    "fields": { "product": 4, "sku": "ANK-L-GRN", "size": "L", "color": "Green", "color_hex": "#2d6a4f", "stock": 3, "is_active": true }
   },
   {
     "model": "store.productvariant",
     "pk": 7,
-    "fields": {
-      "product": 3,
-      "sku": "SSB-M-SND",
-      "size": "M",
-      "color": "Sand",
-      "color_hex": "#E7D8C8",
-      "stock": 0,
-      "is_active": true
-    }
+    "fields": { "product": 5, "sku": "CSS-S-BLU", "size": "S", "color": "Blue", "color_hex": "#1a3a6b", "stock": 8, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 8,
+    "fields": { "product": 5, "sku": "CSS-M-BLU", "size": "M", "color": "Blue", "color_hex": "#1a3a6b", "stock": 12, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 9,
+    "fields": { "product": 5, "sku": "CSS-L-BLU", "size": "L", "color": "Blue", "color_hex": "#1a3a6b", "stock": 7, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 10,
+    "fields": { "product": 6, "sku": "EPS-S-YEL", "size": "S", "color": "Yellow", "color_hex": "#f5c842", "stock": 5, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 11,
+    "fields": { "product": 6, "sku": "EPS-M-YEL", "size": "M", "color": "Yellow", "color_hex": "#f5c842", "stock": 9, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 12,
+    "fields": { "product": 7, "sku": "FPK-S-MUL", "size": "S", "color": "Multicolor", "color_hex": "#e8a0b0", "stock": 15, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 13,
+    "fields": { "product": 7, "sku": "FPK-M-MUL", "size": "M", "color": "Multicolor", "color_hex": "#e8a0b0", "stock": 20, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 14,
+    "fields": { "product": 7, "sku": "FPK-L-MUL", "size": "L", "color": "Multicolor", "color_hex": "#e8a0b0", "stock": 10, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 15,
+    "fields": { "product": 7, "sku": "FPK-XL-MUL", "size": "XL", "color": "Multicolor", "color_hex": "#e8a0b0", "stock": 6, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 16,
+    "fields": { "product": 8, "sku": "EAK-S-WHT", "size": "S", "color": "White", "color_hex": "#f7f3ed", "stock": 8, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 17,
+    "fields": { "product": 8, "sku": "EAK-M-WHT", "size": "M", "color": "White", "color_hex": "#f7f3ed", "stock": 12, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 18,
+    "fields": { "product": 8, "sku": "EAK-L-WHT", "size": "L", "color": "White", "color_hex": "#f7f3ed", "stock": 5, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 19,
+    "fields": { "product": 9, "sku": "BCT-S-MUL", "size": "S", "color": "Multicolor", "color_hex": "#c0914f", "stock": 10, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 20,
+    "fields": { "product": 9, "sku": "BCT-M-MUL", "size": "M", "color": "Multicolor", "color_hex": "#c0914f", "stock": 8, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 21,
+    "fields": { "product": 10, "sku": "BLS-FREE-RED", "size": "FREE", "color": "Deep Red", "color_hex": "#8a1538", "stock": 3, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 22,
+    "fields": { "product": 11, "sku": "NCC-S-ORG", "size": "S", "color": "Orange", "color_hex": "#e07b39", "stock": 6, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 23,
+    "fields": { "product": 11, "sku": "NCC-M-ORG", "size": "M", "color": "Orange", "color_hex": "#e07b39", "stock": 8, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 24,
+    "fields": { "product": 11, "sku": "NCC-L-ORG", "size": "L", "color": "Orange", "color_hex": "#e07b39", "stock": 4, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 25,
+    "fields": { "product": 12, "sku": "SSS-S-PNK", "size": "S", "color": "Pink", "color_hex": "#e8a0b0", "stock": 4, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 26,
+    "fields": { "product": 12, "sku": "SSS-M-PNK", "size": "M", "color": "Pink", "color_hex": "#e8a0b0", "stock": 5, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 27,
+    "fields": { "product": 13, "sku": "BSD-FREE-GLD", "size": "FREE", "color": "Gold", "color_hex": "#c0914f", "stock": 12, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 28,
+    "fields": { "product": 14, "sku": "EPB-FREE-MRN", "size": "FREE", "color": "Maroon", "color_hex": "#8a1538", "stock": 20, "is_active": true }
+  },
+  {
+    "model": "store.productvariant",
+    "pk": 29,
+    "fields": { "product": 15, "sku": "OJE-FREE-SLV", "size": "FREE", "color": "Silver", "color_hex": "#a8a8a8", "stock": 25, "is_active": true }
   }
 ]

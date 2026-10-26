@@ -1,0 +1,30 @@
+original_label,proposed_final_label,proposed_parent,source_row_count,original_excel_rows,approval_status,review_note
+SAREES,SAREES,,24,"2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25",approved_structure,Keep literal label; descriptions are not subcategories or products.
+SAREE WEAVING,SAREE WEAVING,SAREES,3,"26,27,28",approved_structure,Proposed child only; client must confirm whether Weaving is a category or process.
+LINEN SAREE,LINEN SAREE,SAREES,1,29,approved_structure,Keep separate from Saree linen and Saree linen(E; no synonym merge approved.
+Saree printed,Saree printed,SAREES,2,"30,33",approved_structure,Keep separate from SAREE PRINTED A; A is unexplained.
+Saree linen,Saree linen,SAREES,2,"31,32",approved_structure,Keep separate from LINEN SAREE and Saree linen(E; no synonym merge approved.
+SAREE PRINTED A,SAREE PRINTED A,SAREES,2,"34,45",approved_structure,A suffix unexplained; retain literal label.
+Jodhpuri Silk- Soft Cotton,Jodhpuri Silk- Soft Cotton,,1,35,approved_structure,Mixed material terms; leave top-level until category and placement are confirmed.
+Blouse.R.M,Blouse.R.M,,5,"36,37,38,39,40",approved_structure,"R.M unresolved. Front open, Vichithra, Elastic, Mirror, Sona Chandi remain descriptions."
+U.Skirt,U.Skirt,,1,41,approved_structure,Do not expand abbreviation from Saree Shape wear alone.
+SAREE BAGALPURI,SAREE BAGALPURI,SAREES,3,"42,46,47",approved_structure,Keep literal label; descriptions are not subcategories or products.
+SAREE BATIK(AD),SAREE BATIK(AD),SAREES,1,43,approved_structure,AD suffix unexplained; retain literal label.
+Saree linen(E,Saree linen(E,SAREES,1,44,approved_structure,Incomplete suffix; retain exact spelling and separate identity.
+Set Mundu,Set Mundu,,2,"48,49",approved_structure,Keep literal label; descriptions are not subcategories or products.
+Saree plain,Saree plain,SAREES,6,"50,51,52,53,54,55",approved_structure,Keep literal label; descriptions are not subcategories or products.
+lining material,lining material,,2,"56,59",approved_structure,Case variant of Lining Material; keep separate until merge approved.
+Lining Material,Lining Material,,3,"57,58,60",approved_structure,Keep separate from lining material until case-merge approval.
+KURTHI,KURTHI,,12,"61,62,82,85,87,88,89,92,93,97,100,101",approved_structure,Preserve spelling; do not rename Kurti automatically.
+Churdhar.R.M,Churdhar.R.M,,4,"63,74,78,79",approved_structure,R.M unresolved; keep separate from Chundhar.R.M and CHURIDHAR R M O.
+CHURIDAR MATERI,CHURIDAR MATERI,,1,64,approved_structure,Truncated label; no merge with Churidhar Material approved.
+C.mg(G.S.Fancy w,C.mg(G.S.Fancy w,,4,"65,66,67,72",approved_structure,Ambiguous/truncated abbreviation. Batik Print - 3 Pcs and Khadi Buti Print - 3 Pcs remain descriptions.
+CORD SET,CORD SET,,6,"68,71,83,86,90,98",approved_structure,Retain CORD SET; no automatic rename to Co-ords or merge with CORDSET(O).
+TOP SET,TOP SET,,6,"69,80,81,84,102,103",approved_structure,Keep literal label; descriptions are not subcategories or products.
+Chundhar.R.M,Chundhar.R.M,,1,70,approved_structure,Potential spelling variant; no merge with Churdhar.R.M approved.
+CORDSET(O),CORDSET(O),,1,73,approved_structure,O suffix unresolved; keep separate from CORD SET.
+CHURIDHAR R M O,CHURIDHAR R M O,,2,"75,77",approved_structure,R M O unresolved; description 3 Pcs Cord Set does not establish category equivalence.
+TOPSET(O),TOPSET(O),,2,"76,94",approved_structure,O suffix unresolved; keep separate from TOP SET.
+KURTHI(O),KURTHI(O),,3,"91,95,96",approved_structure,O suffix unresolved; keep separate from KURTHI.
+FROCK,FROCK,,1,99,approved_structure,Keep literal label; descriptions are not subcategories or products.
+Churidhar Material,Churidhar Material,,6,"104,105,106,107,108,109",approved_structure,Preserve spelling and keep separate from CHURIDAR MATERI.

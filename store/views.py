@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.db.models import Q
 from .models import Category, Product, ProductVariant, Coupon
 from core.models import Banner
+from .category_catalog import category_tree
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -21,7 +22,8 @@ def _save_cart(request, cart):
 def home(request):
     banners = Banner.objects.filter(is_active=True)
     featured = Product.objects.filter(is_active=True, is_featured=True).prefetch_related("images")[:8]
-    categories = Category.objects.filter(is_active=True)
+    # Only top-level categories for homepage display
+    categories = category_tree()
     return render(request, "store/home.html", {
         "banners": banners,
         "featured_products": featured,
@@ -31,13 +33,20 @@ def home(request):
 
 def product_list(request):
     products = Product.objects.filter(is_active=True).prefetch_related("images").select_related("category")
-    categories = Category.objects.filter(is_active=True)
+    categories = category_tree()
 
     cat_slug = request.GET.get("category")
     sort = request.GET.get("sort", "newest")
+    current_category_obj = None
 
     if cat_slug:
-        products = products.filter(category__slug=cat_slug)
+        try:
+            current_category_obj = Category.objects.get(slug=cat_slug, is_active=True)
+            # Include products from this category AND all its children
+            cat_ids = current_category_obj.descendant_ids()
+            products = products.filter(category__id__in=cat_ids)
+        except Category.DoesNotExist:
+            products = products.none()
 
     if sort == "price_asc":
         products = products.order_by("base_price")
@@ -46,10 +55,18 @@ def product_list(request):
     else:
         products = products.order_by("-created_at")
 
+    from django.core.paginator import Paginator
+    paginator = Paginator(products, 24)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(request, "store/product_list.html", {
-        "products": products,
+        "page_obj": page_obj,
+        "products": page_obj.object_list,
         "categories": categories,
         "current_category": cat_slug,
+        "current_category_obj": current_category_obj,
+        "subcategories": current_category_obj.children.filter(is_active=True, show_in_navigation=True) if current_category_obj else [],
+        "page_title": current_category_obj.name if current_category_obj else "All Products",
         "current_sort": sort,
     })
 
@@ -58,21 +75,44 @@ def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, is_active=True)
     variants = product.variants.filter(is_active=True)
     images = product.images.all()
+    related = Product.objects.filter(
+        category=product.category, is_active=True
+    ).exclude(pk=product.pk).prefetch_related("images")[:4]
     return render(request, "store/product_detail.html", {
         "product": product,
         "variants": variants,
         "images": images,
+        "related_products": related,
     })
 
 
 def category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug, is_active=True)
-    products = Product.objects.filter(category=category, is_active=True).prefetch_related("images")
+    # Include products from this category AND all its children
+    cat_ids = category.descendant_ids()
+    products = Product.objects.filter(category__id__in=cat_ids, is_active=True).prefetch_related("images")
+
+    sort = request.GET.get("sort", "newest")
+    if sort == "price_asc":
+        products = products.order_by("base_price")
+    elif sort == "price_desc":
+        products = products.order_by("-base_price")
+    else:
+        products = products.order_by("-created_at")
+
+    from django.core.paginator import Paginator
+    paginator = Paginator(products, 24)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(request, "store/product_list.html", {
-        "products": products,
-        "categories": Category.objects.filter(is_active=True),
+        "page_obj": page_obj,
+        "products": page_obj.object_list,
+        "categories": category_tree(),
         "current_category": slug,
+        "current_category_obj": category,
+        "subcategories": category.children.filter(is_active=True, show_in_navigation=True),
         "page_title": category.name,
+        "current_sort": sort,
     })
 
 

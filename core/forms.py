@@ -3,7 +3,14 @@ from store.models import Category, Product, ProductVariant, Offer, Coupon
 from .models import StoreSettings, Banner
 
 
+class CategoryChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, category):
+        path = " / ".join(c.name for c in category.get_ancestors() + [category])
+        return path + (" (hidden from navigation)" if not category.show_in_navigation else "")
+
+
 class ProductForm(forms.ModelForm):
+    category = CategoryChoiceField(queryset=Category.objects.all().select_related("parent"))
     class Meta:
         model = Product
         fields = ["category", "name", "slug", "description", "care_instructions",
@@ -15,9 +22,18 @@ class ProductForm(forms.ModelForm):
 
 
 class CategoryForm(forms.ModelForm):
+    parent = CategoryChoiceField(queryset=Category.objects.all(), required=False)
     class Meta:
         model = Category
-        fields = ["name", "slug", "description", "image", "is_active", "order"]
+        fields = ["parent", "name", "slug", "description", "image", "is_active", "show_in_navigation", "static_image", "order"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        excluded = self.instance.descendant_ids() if self.instance.pk else set()
+        self.fields["parent"].queryset = Category.objects.exclude(pk__in=excluded)
+        self.fields["parent"].required = False
+        self.fields["parent"].empty_label = "— Top-level category —"
+
 
 
 class VariantForm(forms.ModelForm):
