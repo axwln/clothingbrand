@@ -1,3 +1,7 @@
-#!/bin/bash
-uv pip install -r requirements.txt --system
-python manage.py collectstatic --noinput --clear
+#!/bin/sh
+set -eu
+
+# Native Django builds install Python dependencies before this command.
+# Vercel runs collectstatic afterwards and publishes STATIC_ROOT to its CDN.
+npm ci --include=dev
+npm run build:css
